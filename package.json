@@ -2,14 +2,30 @@
   "name": "poc-for-aistudios-with-cms",
   "version": "1.0.0",
   "description": "Proof of Concept for AI Studios API with CMS(Wordpress)",
-  "main": "index.js",
+  "private": false,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "clean": "rimraf .next node_modules",
+    "generate": "gqty generate",
+    "format": "prettier --write 'src/**/*.{js,jsx,md,mdx,css,scss}'",
+    "format:check": "prettier --check 'src/**/*.{js,jsx,md,mdx,css,scss}'",
     "wp-env": "wp-env"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/imjlk/poc-for-aistudios-with-cms.git"
+  "dependencies": {
+    "@faustjs/core": "^0.15.2",
+    "@faustjs/next": "^0.15.3",
+    "gqty": "^2.2.0",
+    "next": "^12.1.0",
+    "normalize.css": "^8.0.1",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-icons": "^4.3.1",
+    "react-responsive-carousel": "^3.2.23",
+    "sharp": "^0.30.3",
+    "use-debounce": "^7.0.1"
   },
   "keywords": [
     "React",
@@ -28,6 +44,21 @@
   },
   "homepage": "https://github.com/imjlk/poc-for-aistudios-with-cms#readme",
   "devDependencies": {
+    "@gqty/cli": "^3.1.0",
+    "@wordpress/base-styles": "^4.1.1",
+    "@wordpress/block-library": "^7.0.0",
+    "dotenv-flow": "^3.2.0",
+    "eslint": "8.9.0",
+    "eslint-config-next": "12.0.10",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.25.4",
+    "prettier": "^2.5.1",
+    "rimraf": "^3.0.2",
+    "sass": "^1.49.8",
     "@wordpress/env": "^4.6.0"
+  },
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
   }
 }
