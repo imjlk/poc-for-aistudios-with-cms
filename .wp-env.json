@@ -1,0 +1,22 @@
+{
+  "plugins": [
+    "https://downloads.wordpress.org/plugin/atlas-content-modeler.0.17.0.zip",
+    "https://downloads.wordpress.org/plugin/atlas-search.0.1.14.zip",
+    "https://downloads.wordpress.org/plugin/faustwp.0.7.8.zip",
+    "https://downloads.wordpress.org/plugin/wp-graphql.1.8.1.zip"
+  ],
+  "mappings": {},
+  "config": {
+    "KEY_1": true,
+    "KEY_2": false
+  },
+  "env": {
+    "tests": {
+      "config": {
+        "KEY_1": false
+      },
+      "port": 8766
+    }
+  },
+  "port": 8765
+}

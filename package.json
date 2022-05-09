@@ -1,0 +1,33 @@
+{
+  "name": "poc-for-aistudios-with-cms",
+  "version": "1.0.0",
+  "description": "Proof of Concept for AI Studios API with CMS(Wordpress)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "wp-env": "wp-env"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/imjlk/poc-for-aistudios-with-cms.git"
+  },
+  "keywords": [
+    "React",
+    "Next.js",
+    "AI Studios",
+    "Wordpress",
+    "Docker",
+    "Mongo DB",
+    "Faust.js",
+    "Headless CMS"
+  ],
+  "author": "imjlk",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/imjlk/poc-for-aistudios-with-cms/issues"
+  },
+  "homepage": "https://github.com/imjlk/poc-for-aistudios-with-cms#readme",
+  "devDependencies": {
+    "@wordpress/env": "^4.6.0"
+  }
+}
