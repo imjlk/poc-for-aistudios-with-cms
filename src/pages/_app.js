@@ -5,8 +5,9 @@ import 'styles/main.scss';
 import React from 'react';
 import { client } from 'client';
 import ThemeStyles from 'components/ThemeStyles/ThemeStyles';
+import { wrapper } from "modules/store.js";
 
-export default function MyApp({ Component, pageProps }) {
+const MyApp = ({ Component, pageProps }) => {
   return (
     <>
       <ThemeStyles />
@@ -16,3 +17,5 @@ export default function MyApp({ Component, pageProps }) {
     </>
   );
 }
+
+export default wrapper.withRedux(MyApp);
