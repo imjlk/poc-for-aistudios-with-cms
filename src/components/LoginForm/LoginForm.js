@@ -3,6 +3,11 @@ import React, { useState } from 'react';
 
 import styles from './LoginForm.module.scss';
 
+/* TODO: 재사용 필요할 경우 별도 컴포넌트 분리 */
+function MessageBox({ message, status }) {
+  return <p className={status} dangerouslySetInnerHTML={{ __html: message }}></p>;
+}
+
 /**
  * 
  * @returns {React.ReactElement} LoginForm Component.
@@ -35,6 +40,7 @@ export default function LoginForm() {
       </div>
       <div>
         <input
+          className={styles[`input-field`]}
           type='text'
           value={usernameEmail}
           onChange={(e) => setUserNameEmail(e.target.value)}
@@ -47,6 +53,7 @@ export default function LoginForm() {
       </div>
       <div>
         <input
+          className={styles[`input-field`]}
           type='password'
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -55,10 +62,11 @@ export default function LoginForm() {
       </div>
 
       <div>
-        <button type='submit'>Login</button>
+        <button className={styles[`btn-submit`]}
+          type='submit'>Login</button>
       </div>
     </div>
 
-    {errorMessage ? <p>Error: {errorMessage}</p> : null}
+    {errorMessage && <MessageBox message={errorMessage} status="error"></MessageBox>}
   </form>
 }
