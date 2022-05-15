@@ -24,6 +24,8 @@ import TaxonomyTerms from './TaxonomyTerms';
 import Testimonials from './Testimonials';
 import LoginForm from './LoginForm';
 import LoadWPDataList from './LoadWPDataList';
+import TTVList from './TTVList';
+import AuthWrapper from './AuthWrapper';
 
 export {
   Button,
@@ -52,4 +54,6 @@ export {
   Testimonials,
   LoginForm,
   LoadWPDataList,
+  TTVList,
+  AuthWrapper,
 };

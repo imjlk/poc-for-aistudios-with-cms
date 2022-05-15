@@ -1,8 +1,9 @@
 import { client } from 'client';
-import { SEO, EntryHeader, Header, Footer, Main } from 'components';
+import { SEO, EntryHeader, Header, Footer, Main, TTVList } from 'components';
 import { pageTitle } from 'utils';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { getNextStaticProps } from '@faustjs/next';
 
 export default function Page() {
   const { useQuery } = client;
@@ -17,16 +18,7 @@ export default function Page() {
         <SubNav />
         <EntryHeader title="Text To Video" />
         <div className="container">
-          All TTV List
-          {/* 
-ID | 언어 | 모델 | 옷 | 영상 전환 상태(isCompleted) | 영상 URL | 생성일 | 수정일 | 액션
----------|----------|---------
- A1 | B1 | C1
- A2 | B2 | C2
- A3 | B3 | C3
- ...
-    */}
-          {/* 액션 컬럼에서 리스트 항목별로 영상 제작 상태 확인, 제작 요청 수행  */}
+          <TTVList />
           {/* 여유가 된다면 사이트 업로드 추가(모델 스키마에 추가) */}
         </div>
       </Main>
@@ -62,4 +54,11 @@ function SubNav() {
       </Link>
     </ul>
   );
+}
+
+export async function getStaticProps(context) {
+  return getNextStaticProps(context, {
+    Page,
+    client,
+  });
 }
