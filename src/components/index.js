@@ -22,6 +22,7 @@ import SEO from './SEO';
 import SkipNavigationLink from './SkipNavigationLink';
 import TaxonomyTerms from './TaxonomyTerms';
 import Testimonials from './Testimonials';
+import LoginForm from './LoginForm';
 
 export {
   Button,
@@ -48,4 +49,5 @@ export {
   SkipNavigationLink,
   TaxonomyTerms,
   Testimonials,
+  LoginForm,
 };
