@@ -4,18 +4,12 @@ import * as t from "../types";
 const initialState = {
     ttvList: [],
     selectedTTV: undefined,
-    isModalOpen: false,
 };
 
 const mainReducer = (state = initialState, action) => {
     switch (action.type) {
         case HYDRATE:
             return { ...state, ...action.payload };
-        case t.MODAL_OPEN:
-            return {
-                ...state,
-                isModalOpen: action.payload,
-            };
         case t.TTV_FETCH_SUCCEEDED:
             return {
                 ...state,

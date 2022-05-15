@@ -1,4 +1,5 @@
 import { getNextStaticProps, is404 } from '@faustjs/next';
+import { useDispatch } from "react-redux";
 import { client } from 'client';
 import { useForm } from "react-hook-form";
 import {
@@ -195,9 +196,12 @@ const getModelIndex = (data) => {
 
 export function CRUDComponent({ post }) {
     const { register, watch, handleSubmit } = useForm();
+    // const userState = useSelector((state) => state);
+    const dispatch = useDispatch();
     const [selectedModel, setSelectedModel] = useState(() => models[2]);
-    const onValid = () => {
-        console.log('isVaild')
+    const onValid = (data) => {
+        console.log('data', data)
+        dispatch(addTTV(data))
     }
     const { useQuery } = client;
     const generalSettings = useQuery().generalSettings;
@@ -223,23 +227,27 @@ export function CRUDComponent({ post }) {
                     author={post?.author?.node?.name}
                     image={post?.featuredImage?.node}
                 /> */}
+                {/* "language": "ko",
+                "text": "안녕하세요",
+                "model": "ysy",
+                "clothes": "2" */}
                 <div className="container">
                     <form onSubmit={handleSubmit(onValid)}>
-                        <select value={selectedModel?.language} onChange={onModelChange}>
+                        <select {...register('language')} value={selectedModel?.language} onChange={onModelChange}>
                             {models?.map(model => {
                                 return (<>
                                     <option key={model.language} value={model.language}>{model.language}</option>
                                 </>)
                             })}
                         </select>
-                        <select value={selectedModel?.id} onChange={onModelChange}>
+                        <select {...register('model')} value={selectedModel?.id} onChange={onModelChange}>
                             {models?.map(model => {
                                 return (<>
                                     <option key={model.id} value={model.id}>{model.label.ko}</option>
                                 </>)
                             })}
                         </select>
-                        <select>
+                        <select {...register('clothes')}>
                             {selectedModel?.clothes?.map(cloth => {
                                 return (
                                     <>
@@ -251,7 +259,7 @@ export function CRUDComponent({ post }) {
 
 
                         <div>
-                            <textarea name="" id="" rows="10">
+                            <textarea {...register('text')} id="" rows="10">
                             </textarea>
                             <div className='btns'>
                                 <button>추가 / 수정</button>

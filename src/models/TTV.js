@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
 
 const TTVSchema = new mongoose.Schema({
-    targetPostId: {
-        type: String[],
-    },
+    // targetPostId: {
+    //     type: Array,
+    // },
     laguage: {
         type: String,
         required: [true, "Language is required!"],
