@@ -4,7 +4,7 @@ const TTVSchema = new mongoose.Schema({
     // targetPostId: {
     //     type: Array,
     // },
-    laguage: {
+    language: {
         type: String,
         required: [true, "Language is required!"],
         trim: true,
