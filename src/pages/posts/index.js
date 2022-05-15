@@ -11,7 +11,7 @@ import {
   SEO,
 } from 'components';
 import { pageTitle } from 'utils';
-import useNodePagination from 'hooks/useNodePagination';
+import useNodePagination, { POST_NODES_PREPASS_FIELDS } from 'hooks/useNodePagination';
 
 /**
  * Prepass fields for post nodes. This lists all the pieces of data we need
@@ -20,22 +20,6 @@ import useNodePagination from 'hooks/useNodePagination';
  *
  * @see https://gqty.dev/docs/client/helper-functions#prepass
  */
-const POST_NODES_PREPASS_FIELDS = [
-  'databaseId',
-  'id',
-  '__typename',
-  'featuredImage.*',
-  'featuredImage.node.altText',
-  'featuredImage.node.mediaDetails.width',
-  'featuredImage.node.mediaDetails.height',
-  'featuredImage.node.sourceUrl',
-  'author.node.name',
-  'date',
-  'uri',
-  'title',
-  'slug',
-  'summary',
-];
 
 export default function Page() {
   const { useQuery } = client;

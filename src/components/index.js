@@ -23,6 +23,7 @@ import SkipNavigationLink from './SkipNavigationLink';
 import TaxonomyTerms from './TaxonomyTerms';
 import Testimonials from './Testimonials';
 import LoginForm from './LoginForm';
+import LoadWPDataList from './LoadWPDataList';
 
 export {
   Button,
@@ -50,4 +51,5 @@ export {
   TaxonomyTerms,
   Testimonials,
   LoginForm,
+  LoadWPDataList,
 };

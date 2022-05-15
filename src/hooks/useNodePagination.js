@@ -2,6 +2,22 @@ import appConfig from 'app.config';
 import { client } from 'client';
 import { useRef } from 'react';
 
+export const POST_NODES_PREPASS_FIELDS = [
+  'databaseId',
+  'id',
+  '__typename',
+  'featuredImage.*',
+  'featuredImage.node.altText',
+  'featuredImage.node.mediaDetails.width',
+  'featuredImage.node.mediaDetails.height',
+  'featuredImage.node.sourceUrl',
+  'author.node.name',
+  'date',
+  'uri',
+  'title',
+  'slug',
+  'summary',
+];
 /**
  * The `useNodePagination` hook is an abstraction of the `usePaginatedQuery` from GQty that enables
  * you to specify a query to get nodes and page info, and will fetch those initial items, as well
@@ -13,7 +29,6 @@ import { useRef } from 'react';
  */
 export default function useNodePagination(queryFn, prepassItems) {
   const queryFnRef = useRef(queryFn);
-
   /**
    * Use the `usePaginatedQuery` from GQty to fetch the initial posts and
    * create a `fetchMore` method that can be used to fetch more posts.
