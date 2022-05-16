@@ -371,6 +371,8 @@ export type ContentTypeEnum =
   /** The Type of Content object */
   | 'ATTACHMENT'
   /** The Type of Content object */
+  | 'KOREAN'
+  /** The Type of Content object */
   | 'PAGE'
   /** The Type of Content object */
   | 'POST'
@@ -479,6 +481,29 @@ export interface CreateCommentInput {
   parent?: InputMaybe<Scalars['ID']>;
   /** Type of comment. */
   type?: InputMaybe<Scalars['String']>;
+}
+
+/** Input for the createKoreanArticle mutation */
+export interface CreateKoreanArticleInput {
+  /** The userId to assign as the author of the object */
+  authorId?: InputMaybe<Scalars['ID']>;
+  /** This is an ID that can be passed to a mutation by the client to track the progress of mutations and catch possible duplicate mutation submissions. */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  contentArea?: InputMaybe<Scalars['String']>;
+  /** The date of the object. Preferable to enter as year/month/day (e.g. 01/31/2017) as it will rearrange date as fit if it is not specified. Incomplete dates may have unintended results for example, "2017" as the input will use current date with timestamp 20:17  */
+  date?: InputMaybe<Scalars['String']>;
+  kRTitle: Scalars['String'];
+  /** A field used for ordering posts. This is typically used with nav menu items or for special ordering of hierarchical content types. */
+  menuOrder?: InputMaybe<Scalars['Int']>;
+  /** The password used to protect the content of the object */
+  password?: InputMaybe<Scalars['String']>;
+  /** The slug of the object */
+  slug?: InputMaybe<Scalars['String']>;
+  /** The status of the object */
+  status?: InputMaybe<PostStatusEnum>;
+  summary?: InputMaybe<Scalars['String']>;
+  /** The title of the object */
+  title?: InputMaybe<Scalars['String']>;
 }
 
 /** Input for the createMediaItem mutation */
@@ -599,16 +624,22 @@ export interface CreateProjectInput {
   authorId?: InputMaybe<Scalars['ID']>;
   /** This is an ID that can be passed to a mutation by the client to track the progress of mutations and catch possible duplicate mutation submissions. */
   clientMutationId?: InputMaybe<Scalars['String']>;
+  /** Project Content Area */
+  contentArea?: InputMaybe<Scalars['String']>;
   /** The date of the object. Preferable to enter as year/month/day (e.g. 01/31/2017) as it will rearrange date as fit if it is not specified. Incomplete dates may have unintended results for example, "2017" as the input will use current date with timestamp 20:17  */
   date?: InputMaybe<Scalars['String']>;
   /** A field used for ordering posts. This is typically used with nav menu items or for special ordering of hierarchical content types. */
   menuOrder?: InputMaybe<Scalars['Int']>;
   /** The password used to protect the content of the object */
   password?: InputMaybe<Scalars['String']>;
+  /** Project Title */
+  projectTitle: Scalars['String'];
   /** The slug of the object */
   slug?: InputMaybe<Scalars['String']>;
   /** The status of the object */
   status?: InputMaybe<PostStatusEnum>;
+  /** Project Summary */
+  summary?: InputMaybe<Scalars['String']>;
   /** The title of the object */
   title?: InputMaybe<Scalars['String']>;
 }
@@ -643,6 +674,8 @@ export interface CreateTestimonialInput {
   slug?: InputMaybe<Scalars['String']>;
   /** The status of the object */
   status?: InputMaybe<PostStatusEnum>;
+  testimonialAuthor?: InputMaybe<Scalars['String']>;
+  testimonialContent?: InputMaybe<Scalars['String']>;
   /** The title of the object */
   title?: InputMaybe<Scalars['String']>;
 }
@@ -742,6 +775,16 @@ export interface DeleteCommentInput {
   /** Whether the comment should be force deleted instead of being moved to the trash */
   forceDelete?: InputMaybe<Scalars['Boolean']>;
   /** The deleted comment ID */
+  id: Scalars['ID'];
+}
+
+/** Input for the deleteKoreanArticle mutation */
+export interface DeleteKoreanArticleInput {
+  /** This is an ID that can be passed to a mutation by the client to track the progress of mutations and catch possible duplicate mutation submissions. */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** Whether the object should be force deleted instead of being moved to the trash */
+  forceDelete?: InputMaybe<Scalars['Boolean']>;
+  /** The ID of the koreanArticle to delete */
   id: Scalars['ID'];
 }
 
@@ -912,6 +955,17 @@ export interface HierarchicalContentNodeToContentNodeChildrenConnectionWhereArgs
   /** Title of the object */
   title?: InputMaybe<Scalars['String']>;
 }
+
+/** The Type of Identifier used to fetch a single resource. Default is ID. */
+export type KoreanArticleIdType =
+  /** Identify a resource by the Database ID. */
+  | 'DATABASE_ID'
+  /** Identify a resource by the (hashed) Global ID. */
+  | 'ID'
+  /** Identify a resource by the slug. Available to non-hierarchcial Types where the slug is a unique identifier. */
+  | 'SLUG'
+  /** Identify a resource by the URI. */
+  | 'URI';
 
 /** The Type of Identifier used to fetch a single resource. Default is ID. */
 export type MediaItemIdType =
@@ -1365,6 +1419,23 @@ export interface PageToRevisionConnectionWhereArgs {
   /** Title of the object */
   title?: InputMaybe<Scalars['String']>;
 }
+
+/** The status of the WordPress plugin. */
+export type PluginStatusEnum =
+  /** The plugin is currently active. */
+  | 'ACTIVE'
+  /** The plugin is a drop-in plugin. */
+  | 'DROP_IN'
+  /** The plugin is currently inactive. */
+  | 'INACTIVE'
+  /** The plugin is a must-use plugin. */
+  | 'MUST_USE'
+  /** The plugin is technically active but was paused while loading. */
+  | 'PAUSED'
+  /** The plugin was active recently. */
+  | 'RECENTLY_ACTIVE'
+  /** The plugin has an upgrade available. */
+  | 'UPGRADE';
 
 /** Set relationships between the post to categories */
 export interface PostCategoriesInput {
@@ -2196,6 +2267,52 @@ export interface RootQueryToContentRevisionUnionConnectionWhereArgs {
   title?: InputMaybe<Scalars['String']>;
 }
 
+/** Arguments for filtering the RootQueryToKoreanArticleConnection connection */
+export interface RootQueryToKoreanArticleConnectionWhereArgs {
+  /** The user that's connected as the author of the object. Use the userId for the author object. */
+  author?: InputMaybe<Scalars['Int']>;
+  /** Find objects connected to author(s) in the array of author's userIds */
+  authorIn?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  /** Find objects connected to the author by the author's nicename */
+  authorName?: InputMaybe<Scalars['String']>;
+  /** Find objects NOT connected to author(s) in the array of author's userIds */
+  authorNotIn?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  /** Filter the connection based on dates */
+  dateQuery?: InputMaybe<DateQueryInput>;
+  /** True for objects with passwords; False for objects without passwords; null for all objects with or without passwords */
+  hasPassword?: InputMaybe<Scalars['Boolean']>;
+  /** Specific ID of the object */
+  id?: InputMaybe<Scalars['Int']>;
+  /** Array of IDs for the objects to retrieve */
+  in?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  /** Get objects with a specific mimeType property */
+  mimeType?: InputMaybe<MimeTypeEnum>;
+  /** Slug / post_name of the object */
+  name?: InputMaybe<Scalars['String']>;
+  /** Specify objects to retrieve. Use slugs */
+  nameIn?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  /** Specify IDs NOT to retrieve. If this is used in the same query as "in", it will be ignored */
+  notIn?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  /** What paramater to use to order the objects by. */
+  orderby?: InputMaybe<Array<InputMaybe<PostObjectsConnectionOrderbyInput>>>;
+  /** Use ID to return only children. Use 0 to return only top-level items */
+  parent?: InputMaybe<Scalars['ID']>;
+  /** Specify objects whose parent is in an array */
+  parentIn?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  /** Specify posts whose parent is not in an array */
+  parentNotIn?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  /** Show posts with a specific password. */
+  password?: InputMaybe<Scalars['String']>;
+  /** Show Posts based on a keyword search */
+  search?: InputMaybe<Scalars['String']>;
+  /** Retrieve posts where post status is in an array. */
+  stati?: InputMaybe<Array<InputMaybe<PostStatusEnum>>>;
+  /** Show posts with a specific status. */
+  status?: InputMaybe<PostStatusEnum>;
+  /** Title of the object */
+  title?: InputMaybe<Scalars['String']>;
+}
+
 /** Arguments for filtering the RootQueryToMediaItemConnection connection */
 export interface RootQueryToMediaItemConnectionWhereArgs {
   /** The user that's connected as the author of the object. Use the userId for the author object. */
@@ -2308,6 +2425,16 @@ export interface RootQueryToPageConnectionWhereArgs {
   status?: InputMaybe<PostStatusEnum>;
   /** Title of the object */
   title?: InputMaybe<Scalars['String']>;
+}
+
+/** Arguments for filtering the RootQueryToPluginConnection connection */
+export interface RootQueryToPluginConnectionWhereArgs {
+  /** Show plugin based on a keyword search. */
+  search?: InputMaybe<Scalars['String']>;
+  /** Retrieve plugins where plugin status is in an array. */
+  stati?: InputMaybe<Array<InputMaybe<PluginStatusEnum>>>;
+  /** Show plugins with a specific status. */
+  status?: InputMaybe<PluginStatusEnum>;
 }
 
 /** Arguments for filtering the RootQueryToPostConnection connection */
@@ -2866,6 +2993,31 @@ export interface UpdateCommentInput {
   type?: InputMaybe<Scalars['String']>;
 }
 
+/** Input for the updateKoreanArticle mutation */
+export interface UpdateKoreanArticleInput {
+  /** The userId to assign as the author of the object */
+  authorId?: InputMaybe<Scalars['ID']>;
+  /** This is an ID that can be passed to a mutation by the client to track the progress of mutations and catch possible duplicate mutation submissions. */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  contentArea?: InputMaybe<Scalars['String']>;
+  /** The date of the object. Preferable to enter as year/month/day (e.g. 01/31/2017) as it will rearrange date as fit if it is not specified. Incomplete dates may have unintended results for example, "2017" as the input will use current date with timestamp 20:17  */
+  date?: InputMaybe<Scalars['String']>;
+  /** The ID of the koreanArticle object */
+  id: Scalars['ID'];
+  kRTitle?: InputMaybe<Scalars['String']>;
+  /** A field used for ordering posts. This is typically used with nav menu items or for special ordering of hierarchical content types. */
+  menuOrder?: InputMaybe<Scalars['Int']>;
+  /** The password used to protect the content of the object */
+  password?: InputMaybe<Scalars['String']>;
+  /** The slug of the object */
+  slug?: InputMaybe<Scalars['String']>;
+  /** The status of the object */
+  status?: InputMaybe<PostStatusEnum>;
+  summary?: InputMaybe<Scalars['String']>;
+  /** The title of the object */
+  title?: InputMaybe<Scalars['String']>;
+}
+
 /** Input for the updateMediaItem mutation */
 export interface UpdateMediaItemInput {
   /** Alternative text to display when mediaItem is not displayed */
@@ -2992,6 +3144,8 @@ export interface UpdateProjectInput {
   authorId?: InputMaybe<Scalars['ID']>;
   /** This is an ID that can be passed to a mutation by the client to track the progress of mutations and catch possible duplicate mutation submissions. */
   clientMutationId?: InputMaybe<Scalars['String']>;
+  /** Project Content Area */
+  contentArea?: InputMaybe<Scalars['String']>;
   /** The date of the object. Preferable to enter as year/month/day (e.g. 01/31/2017) as it will rearrange date as fit if it is not specified. Incomplete dates may have unintended results for example, "2017" as the input will use current date with timestamp 20:17  */
   date?: InputMaybe<Scalars['String']>;
   /** The ID of the project object */
@@ -3000,10 +3154,14 @@ export interface UpdateProjectInput {
   menuOrder?: InputMaybe<Scalars['Int']>;
   /** The password used to protect the content of the object */
   password?: InputMaybe<Scalars['String']>;
+  /** Project Title */
+  projectTitle?: InputMaybe<Scalars['String']>;
   /** The slug of the object */
   slug?: InputMaybe<Scalars['String']>;
   /** The status of the object */
   status?: InputMaybe<PostStatusEnum>;
+  /** Project Summary */
+  summary?: InputMaybe<Scalars['String']>;
   /** The title of the object */
   title?: InputMaybe<Scalars['String']>;
 }
@@ -3081,6 +3239,8 @@ export interface UpdateTestimonialInput {
   slug?: InputMaybe<Scalars['String']>;
   /** The status of the object */
   status?: InputMaybe<PostStatusEnum>;
+  testimonialAuthor?: InputMaybe<Scalars['String']>;
+  testimonialContent?: InputMaybe<Scalars['String']>;
   /** The title of the object */
   title?: InputMaybe<Scalars['String']>;
 }
@@ -3219,6 +3379,52 @@ export interface UserToCommentConnectionWhereArgs {
 export interface UserToContentRevisionUnionConnectionWhereArgs {
   /** The Types of content to filter */
   contentTypes?: InputMaybe<Array<InputMaybe<ContentTypeEnum>>>;
+  /** Filter the connection based on dates */
+  dateQuery?: InputMaybe<DateQueryInput>;
+  /** True for objects with passwords; False for objects without passwords; null for all objects with or without passwords */
+  hasPassword?: InputMaybe<Scalars['Boolean']>;
+  /** Specific ID of the object */
+  id?: InputMaybe<Scalars['Int']>;
+  /** Array of IDs for the objects to retrieve */
+  in?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  /** Get objects with a specific mimeType property */
+  mimeType?: InputMaybe<MimeTypeEnum>;
+  /** Slug / post_name of the object */
+  name?: InputMaybe<Scalars['String']>;
+  /** Specify objects to retrieve. Use slugs */
+  nameIn?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  /** Specify IDs NOT to retrieve. If this is used in the same query as "in", it will be ignored */
+  notIn?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  /** What paramater to use to order the objects by. */
+  orderby?: InputMaybe<Array<InputMaybe<PostObjectsConnectionOrderbyInput>>>;
+  /** Use ID to return only children. Use 0 to return only top-level items */
+  parent?: InputMaybe<Scalars['ID']>;
+  /** Specify objects whose parent is in an array */
+  parentIn?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  /** Specify posts whose parent is not in an array */
+  parentNotIn?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  /** Show posts with a specific password. */
+  password?: InputMaybe<Scalars['String']>;
+  /** Show Posts based on a keyword search */
+  search?: InputMaybe<Scalars['String']>;
+  /** Retrieve posts where post status is in an array. */
+  stati?: InputMaybe<Array<InputMaybe<PostStatusEnum>>>;
+  /** Show posts with a specific status. */
+  status?: InputMaybe<PostStatusEnum>;
+  /** Title of the object */
+  title?: InputMaybe<Scalars['String']>;
+}
+
+/** Arguments for filtering the UserToKoreanArticleConnection connection */
+export interface UserToKoreanArticleConnectionWhereArgs {
+  /** The user that's connected as the author of the object. Use the userId for the author object. */
+  author?: InputMaybe<Scalars['Int']>;
+  /** Find objects connected to author(s) in the array of author's userIds */
+  authorIn?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  /** Find objects connected to the author by the author's nicename */
+  authorName?: InputMaybe<Scalars['String']>;
+  /** Find objects NOT connected to author(s) in the array of author's userIds */
+  authorNotIn?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   /** Filter the connection based on dates */
   dateQuery?: InputMaybe<DateQueryInput>;
   /** True for objects with passwords; False for objects without passwords; null for all objects with or without passwords */
@@ -3796,6 +4002,14 @@ export declare const generatedSchema: {
   };
   CommentAuthor: {
     __typename: { __type: 'String!' };
+    avatar: {
+      __type: 'Avatar';
+      __args: {
+        forceDefault: 'Boolean';
+        rating: 'AvatarRatingEnum';
+        size: 'Int';
+      };
+    };
     databaseId: { __type: 'Int!' };
     email: { __type: 'String' };
     id: { __type: 'ID!' };
@@ -3890,6 +4104,7 @@ export declare const generatedSchema: {
   };
   Commenter: {
     __typename: { __type: 'String!' };
+    avatar: { __type: 'Avatar' };
     databaseId: { __type: 'Int!' };
     email: { __type: 'String' };
     id: { __type: 'ID!' };
@@ -4127,6 +4342,24 @@ export declare const generatedSchema: {
     comment: { __type: 'Comment' };
     success: { __type: 'Boolean' };
   };
+  CreateKoreanArticleInput: {
+    authorId: { __type: 'ID' };
+    clientMutationId: { __type: 'String' };
+    contentArea: { __type: 'String' };
+    date: { __type: 'String' };
+    kRTitle: { __type: 'String!' };
+    menuOrder: { __type: 'Int' };
+    password: { __type: 'String' };
+    slug: { __type: 'String' };
+    status: { __type: 'PostStatusEnum' };
+    summary: { __type: 'String' };
+    title: { __type: 'String' };
+  };
+  CreateKoreanArticlePayload: {
+    __typename: { __type: 'String!' };
+    clientMutationId: { __type: 'String' };
+    koreanArticle: { __type: 'KoreanArticle' };
+  };
   CreateMediaItemInput: {
     altText: { __type: 'String' };
     authorId: { __type: 'ID' };
@@ -4206,11 +4439,14 @@ export declare const generatedSchema: {
   CreateProjectInput: {
     authorId: { __type: 'ID' };
     clientMutationId: { __type: 'String' };
+    contentArea: { __type: 'String' };
     date: { __type: 'String' };
     menuOrder: { __type: 'Int' };
     password: { __type: 'String' };
+    projectTitle: { __type: 'String!' };
     slug: { __type: 'String' };
     status: { __type: 'PostStatusEnum' };
+    summary: { __type: 'String' };
     title: { __type: 'String' };
   };
   CreateProjectPayload: {
@@ -4238,6 +4474,8 @@ export declare const generatedSchema: {
     password: { __type: 'String' };
     slug: { __type: 'String' };
     status: { __type: 'PostStatusEnum' };
+    testimonialAuthor: { __type: 'String' };
+    testimonialContent: { __type: 'String' };
     title: { __type: 'String' };
   };
   CreateTestimonialPayload: {
@@ -4319,6 +4557,17 @@ export declare const generatedSchema: {
     clientMutationId: { __type: 'String' };
     comment: { __type: 'Comment' };
     deletedId: { __type: 'ID' };
+  };
+  DeleteKoreanArticleInput: {
+    clientMutationId: { __type: 'String' };
+    forceDelete: { __type: 'Boolean' };
+    id: { __type: 'ID!' };
+  };
+  DeleteKoreanArticlePayload: {
+    __typename: { __type: 'String!' };
+    clientMutationId: { __type: 'String' };
+    deletedId: { __type: 'ID' };
+    koreanArticle: { __type: 'KoreanArticle' };
   };
   DeleteMediaItemInput: {
     clientMutationId: { __type: 'String' };
@@ -4570,6 +4819,63 @@ export declare const generatedSchema: {
     parentDatabaseId: { __type: 'Int' };
     parentId: { __type: 'ID' };
     $on: { __type: '$HierarchicalTermNode!' };
+  };
+  KoreanArticle: {
+    __typename: { __type: 'String!' };
+    author: { __type: 'NodeWithAuthorToUserConnectionEdge' };
+    authorDatabaseId: { __type: 'Int' };
+    authorId: { __type: 'ID' };
+    conditionalTags: { __type: 'ConditionalTags' };
+    contentArea: { __type: 'String' };
+    contentType: { __type: 'ContentNodeToContentTypeConnectionEdge' };
+    contentTypeName: { __type: 'String!' };
+    databaseId: { __type: 'Int!' };
+    date: { __type: 'String' };
+    dateGmt: { __type: 'String' };
+    desiredSlug: { __type: 'String' };
+    editingLockedBy: { __type: 'ContentNodeToEditLockConnectionEdge' };
+    enclosure: { __type: 'String' };
+    enqueuedScripts: {
+      __type: 'ContentNodeToEnqueuedScriptConnection';
+      __args: { after: 'String'; before: 'String'; first: 'Int'; last: 'Int' };
+    };
+    enqueuedStylesheets: {
+      __type: 'ContentNodeToEnqueuedStylesheetConnection';
+      __args: { after: 'String'; before: 'String'; first: 'Int'; last: 'Int' };
+    };
+    featuredImage: { __type: 'NodeWithFeaturedImageToMediaItemConnectionEdge' };
+    featuredImageDatabaseId: { __type: 'Int' };
+    featuredImageId: { __type: 'ID' };
+    guid: { __type: 'String' };
+    id: { __type: 'ID!' };
+    image: { __type: 'MediaItem' };
+    isContentNode: { __type: 'Boolean!' };
+    isPreview: { __type: 'Boolean' };
+    isRestricted: { __type: 'Boolean' };
+    isTermNode: { __type: 'Boolean!' };
+    kRTitle: { __type: 'String' };
+    koreanArticleId: { __type: 'Int!' };
+    lastEditedBy: { __type: 'ContentNodeToEditLastConnectionEdge' };
+    link: { __type: 'String' };
+    modified: { __type: 'String' };
+    modifiedGmt: { __type: 'String' };
+    preview: { __type: 'KoreanArticleToPreviewConnectionEdge' };
+    previewRevisionDatabaseId: { __type: 'Int' };
+    previewRevisionId: { __type: 'ID' };
+    slug: { __type: 'String' };
+    status: { __type: 'String' };
+    summary: { __type: 'String' };
+    template: { __type: 'ContentTemplate' };
+    templates: { __type: '[String]' };
+    title: {
+      __type: 'String';
+      __args: { format: 'PostObjectFieldFormatEnum' };
+    };
+    uri: { __type: 'String' };
+  };
+  KoreanArticleToPreviewConnectionEdge: {
+    __typename: { __type: 'String!' };
+    node: { __type: 'KoreanArticle' };
   };
   MediaDetails: {
     __typename: { __type: 'String!' };
@@ -5981,6 +6287,40 @@ export declare const generatedSchema: {
     cursor: { __type: 'String' };
     node: { __type: 'EnqueuedStylesheet' };
   };
+  RootQueryToKoreanArticleConnection: {
+    __typename: { __type: 'String!' };
+    edges: { __type: '[RootQueryToKoreanArticleConnectionEdge]' };
+    nodes: { __type: '[KoreanArticle]' };
+    pageInfo: { __type: 'WPPageInfo' };
+  };
+  RootQueryToKoreanArticleConnectionEdge: {
+    __typename: { __type: 'String!' };
+    cursor: { __type: 'String' };
+    node: { __type: 'KoreanArticle' };
+  };
+  RootQueryToKoreanArticleConnectionWhereArgs: {
+    author: { __type: 'Int' };
+    authorIn: { __type: '[ID]' };
+    authorName: { __type: 'String' };
+    authorNotIn: { __type: '[ID]' };
+    dateQuery: { __type: 'DateQueryInput' };
+    hasPassword: { __type: 'Boolean' };
+    id: { __type: 'Int' };
+    in: { __type: '[ID]' };
+    mimeType: { __type: 'MimeTypeEnum' };
+    name: { __type: 'String' };
+    nameIn: { __type: '[String]' };
+    notIn: { __type: '[ID]' };
+    orderby: { __type: '[PostObjectsConnectionOrderbyInput]' };
+    parent: { __type: 'ID' };
+    parentIn: { __type: '[ID]' };
+    parentNotIn: { __type: '[ID]' };
+    password: { __type: 'String' };
+    search: { __type: 'String' };
+    stati: { __type: '[PostStatusEnum]' };
+    status: { __type: 'PostStatusEnum' };
+    title: { __type: 'String' };
+  };
   RootQueryToMediaItemConnection: {
     __typename: { __type: 'String!' };
     edges: { __type: '[RootQueryToMediaItemConnectionEdge]' };
@@ -6092,6 +6432,11 @@ export declare const generatedSchema: {
     __typename: { __type: 'String!' };
     cursor: { __type: 'String' };
     node: { __type: 'Plugin' };
+  };
+  RootQueryToPluginConnectionWhereArgs: {
+    search: { __type: 'String' };
+    stati: { __type: '[PluginStatusEnum]' };
+    status: { __type: 'PluginStatusEnum' };
   };
   RootQueryToPostConnection: {
     __typename: { __type: 'String!' };
@@ -6736,6 +7081,25 @@ export declare const generatedSchema: {
     comment: { __type: 'Comment' };
     success: { __type: 'Boolean' };
   };
+  UpdateKoreanArticleInput: {
+    authorId: { __type: 'ID' };
+    clientMutationId: { __type: 'String' };
+    contentArea: { __type: 'String' };
+    date: { __type: 'String' };
+    id: { __type: 'ID!' };
+    kRTitle: { __type: 'String' };
+    menuOrder: { __type: 'Int' };
+    password: { __type: 'String' };
+    slug: { __type: 'String' };
+    status: { __type: 'PostStatusEnum' };
+    summary: { __type: 'String' };
+    title: { __type: 'String' };
+  };
+  UpdateKoreanArticlePayload: {
+    __typename: { __type: 'String!' };
+    clientMutationId: { __type: 'String' };
+    koreanArticle: { __type: 'KoreanArticle' };
+  };
   UpdateMediaItemInput: {
     altText: { __type: 'String' };
     authorId: { __type: 'ID' };
@@ -6819,12 +7183,15 @@ export declare const generatedSchema: {
   UpdateProjectInput: {
     authorId: { __type: 'ID' };
     clientMutationId: { __type: 'String' };
+    contentArea: { __type: 'String' };
     date: { __type: 'String' };
     id: { __type: 'ID!' };
     menuOrder: { __type: 'Int' };
     password: { __type: 'String' };
+    projectTitle: { __type: 'String' };
     slug: { __type: 'String' };
     status: { __type: 'PostStatusEnum' };
+    summary: { __type: 'String' };
     title: { __type: 'String' };
   };
   UpdateProjectPayload: {
@@ -6887,6 +7254,8 @@ export declare const generatedSchema: {
     password: { __type: 'String' };
     slug: { __type: 'String' };
     status: { __type: 'PostStatusEnum' };
+    testimonialAuthor: { __type: 'String' };
+    testimonialContent: { __type: 'String' };
     title: { __type: 'String' };
   };
   UpdateTestimonialPayload: {
@@ -6959,6 +7328,16 @@ export declare const generatedSchema: {
     isContentNode: { __type: 'Boolean!' };
     isRestricted: { __type: 'Boolean' };
     isTermNode: { __type: 'Boolean!' };
+    koreanArticles: {
+      __type: 'UserToKoreanArticleConnection';
+      __args: {
+        after: 'String';
+        before: 'String';
+        first: 'Int';
+        last: 'Int';
+        where: 'UserToKoreanArticleConnectionWhereArgs';
+      };
+    };
     lastName: { __type: 'String' };
     locale: { __type: 'String' };
     mediaItems: {
@@ -7138,6 +7517,40 @@ export declare const generatedSchema: {
     __typename: { __type: 'String!' };
     cursor: { __type: 'String' };
     node: { __type: 'EnqueuedStylesheet' };
+  };
+  UserToKoreanArticleConnection: {
+    __typename: { __type: 'String!' };
+    edges: { __type: '[UserToKoreanArticleConnectionEdge]' };
+    nodes: { __type: '[KoreanArticle]' };
+    pageInfo: { __type: 'WPPageInfo' };
+  };
+  UserToKoreanArticleConnectionEdge: {
+    __typename: { __type: 'String!' };
+    cursor: { __type: 'String' };
+    node: { __type: 'KoreanArticle' };
+  };
+  UserToKoreanArticleConnectionWhereArgs: {
+    author: { __type: 'Int' };
+    authorIn: { __type: '[ID]' };
+    authorName: { __type: 'String' };
+    authorNotIn: { __type: '[ID]' };
+    dateQuery: { __type: 'DateQueryInput' };
+    hasPassword: { __type: 'Boolean' };
+    id: { __type: 'Int' };
+    in: { __type: '[ID]' };
+    mimeType: { __type: 'MimeTypeEnum' };
+    name: { __type: 'String' };
+    nameIn: { __type: '[String]' };
+    notIn: { __type: '[ID]' };
+    orderby: { __type: '[PostObjectsConnectionOrderbyInput]' };
+    parent: { __type: 'ID' };
+    parentIn: { __type: '[ID]' };
+    parentNotIn: { __type: '[ID]' };
+    password: { __type: 'String' };
+    search: { __type: 'String' };
+    stati: { __type: '[PostStatusEnum]' };
+    status: { __type: 'PostStatusEnum' };
+    title: { __type: 'String' };
   };
   UserToMediaItemConnection: {
     __typename: { __type: 'String!' };
@@ -7357,6 +7770,10 @@ export declare const generatedSchema: {
       __type: 'CreateCommentPayload';
       __args: { input: 'CreateCommentInput!' };
     };
+    createKoreanArticle: {
+      __type: 'CreateKoreanArticlePayload';
+      __args: { input: 'CreateKoreanArticleInput!' };
+    };
     createMediaItem: {
       __type: 'CreateMediaItemPayload';
       __args: { input: 'CreateMediaItemInput!' };
@@ -7396,6 +7813,10 @@ export declare const generatedSchema: {
     deleteComment: {
       __type: 'DeleteCommentPayload';
       __args: { input: 'DeleteCommentInput!' };
+    };
+    deleteKoreanArticle: {
+      __type: 'DeleteKoreanArticlePayload';
+      __args: { input: 'DeleteKoreanArticleInput!' };
     };
     deleteMediaItem: {
       __type: 'DeleteMediaItemPayload';
@@ -7457,6 +7878,10 @@ export declare const generatedSchema: {
     updateComment: {
       __type: 'UpdateCommentPayload';
       __args: { input: 'UpdateCommentInput!' };
+    };
+    updateKoreanArticle: {
+      __type: 'UpdateKoreanArticlePayload';
+      __args: { input: 'UpdateKoreanArticleInput!' };
     };
     updateMediaItem: {
       __type: 'UpdateMediaItemPayload';
@@ -7555,6 +7980,33 @@ export declare const generatedSchema: {
     };
     discussionSettings: { __type: 'DiscussionSettings' };
     generalSettings: { __type: 'GeneralSettings' };
+    koreanArticle: {
+      __type: 'KoreanArticle';
+      __args: {
+        asPreview: 'Boolean';
+        id: 'ID!';
+        idType: 'KoreanArticleIdType';
+      };
+    };
+    koreanArticleBy: {
+      __type: 'KoreanArticle';
+      __args: {
+        id: 'ID';
+        koreanArticleId: 'Int';
+        slug: 'String';
+        uri: 'String';
+      };
+    };
+    koreanArticles: {
+      __type: 'RootQueryToKoreanArticleConnection';
+      __args: {
+        after: 'String';
+        before: 'String';
+        first: 'Int';
+        last: 'Int';
+        where: 'RootQueryToKoreanArticleConnectionWhereArgs';
+      };
+    };
     mediaItem: {
       __type: 'MediaItem';
       __args: { asPreview: 'Boolean'; id: 'ID!'; idType: 'MediaItemIdType' };
@@ -7627,7 +8079,13 @@ export declare const generatedSchema: {
     plugin: { __type: 'Plugin'; __args: { id: 'ID!' } };
     plugins: {
       __type: 'RootQueryToPluginConnection';
-      __args: { after: 'String'; before: 'String'; first: 'Int'; last: 'Int' };
+      __args: {
+        after: 'String';
+        before: 'String';
+        first: 'Int';
+        last: 'Int';
+        where: 'RootQueryToPluginConnectionWhereArgs';
+      };
     };
     post: {
       __type: 'Post';
@@ -7785,6 +8243,7 @@ export declare const generatedSchema: {
     DatabaseIdentifier: [
       'Category',
       'Comment',
+      'KoreanArticle',
       'MediaItem',
       'Menu',
       'MenuItem',
@@ -7805,6 +8264,7 @@ export declare const generatedSchema: {
       'ContentType',
       'EnqueuedScript',
       'EnqueuedStylesheet',
+      'KoreanArticle',
       'MediaItem',
       'Menu',
       'MenuItem',
@@ -7824,6 +8284,7 @@ export declare const generatedSchema: {
     UniformResourceIdentifiable: [
       'Category',
       'ContentType',
+      'KoreanArticle',
       'MediaItem',
       'Page',
       'Post',
@@ -7843,15 +8304,43 @@ export declare const generatedSchema: {
       'Template_SinglePostNoSeparators'
     ];
     EnqueuedAsset: ['EnqueuedScript', 'EnqueuedStylesheet'];
-    ContentNode: ['MediaItem', 'Page', 'Post', 'Project', 'Testimonial'];
+    ContentNode: [
+      'KoreanArticle',
+      'MediaItem',
+      'Page',
+      'Post',
+      'Project',
+      'Testimonial'
+    ];
+    NodeWithAuthor: [
+      'KoreanArticle',
+      'MediaItem',
+      'Page',
+      'Post',
+      'Project',
+      'Testimonial'
+    ];
+    NodeWithFeaturedImage: ['KoreanArticle', 'Page', 'Post', 'Project'];
+    NodeWithTemplate: [
+      'KoreanArticle',
+      'MediaItem',
+      'Page',
+      'Post',
+      'Project',
+      'Testimonial'
+    ];
+    NodeWithTitle: [
+      'KoreanArticle',
+      'MediaItem',
+      'Page',
+      'Post',
+      'Project',
+      'Testimonial'
+    ];
     HierarchicalContentNode: ['MediaItem', 'Page'];
-    NodeWithAuthor: ['MediaItem', 'Page', 'Post', 'Project', 'Testimonial'];
     NodeWithComments: ['MediaItem', 'Page', 'Post'];
-    NodeWithTemplate: ['MediaItem', 'Page', 'Post', 'Project', 'Testimonial'];
-    NodeWithTitle: ['MediaItem', 'Page', 'Post', 'Project', 'Testimonial'];
     MenuItemObjectUnion: ['Category', 'Page', 'Post', 'Tag'];
     NodeWithContentEditor: ['Page', 'Post'];
-    NodeWithFeaturedImage: ['Page', 'Post', 'Project'];
     NodeWithPageAttributes: ['Page'];
     NodeWithRevisions: ['Page', 'Post'];
     NodeWithExcerpt: ['Post'];
@@ -8423,6 +8912,24 @@ export interface Comment {
 export interface CommentAuthor {
   __typename?: 'CommentAuthor';
   /**
+   * Avatar object for user. The avatar object can be retrieved in different sizes by specifying the size argument.
+   */
+  avatar: (args?: {
+    /**
+     * Whether to always show the default image, never the Gravatar. Default false
+     */
+    forceDefault?: Maybe<Scalars['Boolean']>;
+    /**
+     * The rating level of the avatar.
+     */
+    rating?: Maybe<AvatarRatingEnum>;
+    /**
+     * The size attribute of the avatar field can be used to fetch avatars of different sizes. The value corresponds to the dimension in pixels to fetch. The default is 96 pixels.
+     * @defaultValue `96`
+     */
+    size?: Maybe<Scalars['Int']>;
+  }) => Maybe<Avatar>;
+  /**
    * Identifies the primary key from the database.
    */
   databaseId: ScalarsEnums['Int'];
@@ -8520,6 +9027,10 @@ export interface CommentToParentCommentConnectionEdge {
  */
 export interface Commenter {
   __typename?: 'CommentAuthor' | 'User';
+  /**
+   * Avatar object for user. The avatar object can be retrieved in different sizes by specifying the size argument.
+   */
+  avatar?: Maybe<Avatar>;
   /**
    * Identifies the primary key from the database.
    */
@@ -8668,7 +9179,13 @@ export interface ConditionalTags {
  * Nodes used to manage content
  */
 export interface ContentNode {
-  __typename?: 'MediaItem' | 'Page' | 'Post' | 'Project' | 'Testimonial';
+  __typename?:
+    | 'KoreanArticle'
+    | 'MediaItem'
+    | 'Page'
+    | 'Post'
+    | 'Project'
+    | 'Testimonial';
   /**
    * @deprecated Deprecated in favor of using Next.js pages
    */
@@ -9226,6 +9743,21 @@ export interface CreateCommentPayload {
 }
 
 /**
+ * The payload for the createKoreanArticle mutation
+ */
+export interface CreateKoreanArticlePayload {
+  __typename?: 'CreateKoreanArticlePayload';
+  /**
+   * If a &#039;clientMutationId&#039; input is provided to the mutation, it will be returned as output on the mutation. This ID can be used by the client to track the progress of mutations and catch possible duplicate mutation submissions.
+   */
+  clientMutationId?: Maybe<ScalarsEnums['String']>;
+  /**
+   * The Post object mutation type.
+   */
+  koreanArticle?: Maybe<KoreanArticle>;
+}
+
+/**
  * The payload for the createMediaItem mutation
  */
 export interface CreateMediaItemPayload {
@@ -9352,6 +9884,7 @@ export interface DatabaseIdentifier {
   __typename?:
     | 'Category'
     | 'Comment'
+    | 'KoreanArticle'
     | 'MediaItem'
     | 'Menu'
     | 'MenuItem'
@@ -9416,6 +9949,25 @@ export interface DeleteCommentPayload {
    * The deleted comment ID
    */
   deletedId?: Maybe<ScalarsEnums['ID']>;
+}
+
+/**
+ * The payload for the deleteKoreanArticle mutation
+ */
+export interface DeleteKoreanArticlePayload {
+  __typename?: 'DeleteKoreanArticlePayload';
+  /**
+   * If a &#039;clientMutationId&#039; input is provided to the mutation, it will be returned as output on the mutation. This ID can be used by the client to track the progress of mutations and catch possible duplicate mutation submissions.
+   */
+  clientMutationId?: Maybe<ScalarsEnums['String']>;
+  /**
+   * The ID of the deleted object
+   */
+  deletedId?: Maybe<ScalarsEnums['ID']>;
+  /**
+   * The object before it was deleted
+   */
+  koreanArticle?: Maybe<KoreanArticle>;
 }
 
 /**
@@ -9920,6 +10472,213 @@ export interface HierarchicalTermNode {
    */
   parentId?: Maybe<ScalarsEnums['ID']>;
   $on: $HierarchicalTermNode;
+}
+
+/**
+ * The koreanArticle type
+ */
+export interface KoreanArticle {
+  __typename?: 'KoreanArticle';
+  /**
+   * Connection between the NodeWithAuthor type and the User type
+   */
+  author?: Maybe<NodeWithAuthorToUserConnectionEdge>;
+  /**
+   * The database identifier of the author of the node
+   */
+  authorDatabaseId?: Maybe<ScalarsEnums['Int']>;
+  /**
+   * The globally unique identifier of the author of the node
+   */
+  authorId?: Maybe<ScalarsEnums['ID']>;
+  /**
+   * @deprecated Deprecated in favor of using Next.js pages
+   */
+  conditionalTags?: Maybe<ConditionalTags>;
+  contentArea?: Maybe<ScalarsEnums['String']>;
+  /**
+   * Connection between the ContentNode type and the ContentType type
+   */
+  contentType?: Maybe<ContentNodeToContentTypeConnectionEdge>;
+  /**
+   * The name of the Content Type the node belongs to
+   */
+  contentTypeName: ScalarsEnums['String'];
+  /**
+   * The unique identifier stored in the database
+   */
+  databaseId: ScalarsEnums['Int'];
+  /**
+   * Post publishing date.
+   */
+  date?: Maybe<ScalarsEnums['String']>;
+  /**
+   * The publishing date set in GMT.
+   */
+  dateGmt?: Maybe<ScalarsEnums['String']>;
+  /**
+   * The desired slug of the post
+   */
+  desiredSlug?: Maybe<ScalarsEnums['String']>;
+  /**
+   * If a user has edited the node within the past 15 seconds, this will return the user that last edited. Null if the edit lock doesn&#039;t exist or is greater than 15 seconds
+   */
+  editingLockedBy?: Maybe<ContentNodeToEditLockConnectionEdge>;
+  /**
+   * The RSS enclosure for the object
+   */
+  enclosure?: Maybe<ScalarsEnums['String']>;
+  /**
+   * Connection between the ContentNode type and the EnqueuedScript type
+   */
+  enqueuedScripts: (args?: {
+    /**
+     * Cursor used along with the "first" argument to reference where in the dataset to get data
+     */
+    after?: Maybe<Scalars['String']>;
+    /**
+     * Cursor used along with the "last" argument to reference where in the dataset to get data
+     */
+    before?: Maybe<Scalars['String']>;
+    /**
+     * The number of items to return after the referenced "after" cursor
+     */
+    first?: Maybe<Scalars['Int']>;
+    /**
+     * The number of items to return before the referenced "before" cursor
+     */
+    last?: Maybe<Scalars['Int']>;
+  }) => Maybe<ContentNodeToEnqueuedScriptConnection>;
+  /**
+   * Connection between the ContentNode type and the EnqueuedStylesheet type
+   */
+  enqueuedStylesheets: (args?: {
+    /**
+     * Cursor used along with the "first" argument to reference where in the dataset to get data
+     */
+    after?: Maybe<Scalars['String']>;
+    /**
+     * Cursor used along with the "last" argument to reference where in the dataset to get data
+     */
+    before?: Maybe<Scalars['String']>;
+    /**
+     * The number of items to return after the referenced "after" cursor
+     */
+    first?: Maybe<Scalars['Int']>;
+    /**
+     * The number of items to return before the referenced "before" cursor
+     */
+    last?: Maybe<Scalars['Int']>;
+  }) => Maybe<ContentNodeToEnqueuedStylesheetConnection>;
+  /**
+   * Connection between the NodeWithFeaturedImage type and the MediaItem type
+   */
+  featuredImage?: Maybe<NodeWithFeaturedImageToMediaItemConnectionEdge>;
+  /**
+   * The database identifier for the featured image node assigned to the content node
+   */
+  featuredImageDatabaseId?: Maybe<ScalarsEnums['Int']>;
+  /**
+   * Globally unique ID of the featured image assigned to the node
+   */
+  featuredImageId?: Maybe<ScalarsEnums['ID']>;
+  /**
+   * The global unique identifier for this post. This currently matches the value stored in WP_Post-&gt;guid and the guid column in the &quot;post_objects&quot; database table.
+   */
+  guid?: Maybe<ScalarsEnums['String']>;
+  /**
+   * The globally unique identifier of the korean object.
+   */
+  id: ScalarsEnums['ID'];
+  image?: Maybe<MediaItem>;
+  /**
+   * Whether the node is a Content Node
+   */
+  isContentNode: ScalarsEnums['Boolean'];
+  /**
+   * Whether the object is a node in the preview state
+   */
+  isPreview?: Maybe<ScalarsEnums['Boolean']>;
+  /**
+   * Whether the object is restricted from the current viewer
+   */
+  isRestricted?: Maybe<ScalarsEnums['Boolean']>;
+  /**
+   * Whether the node is a Term
+   */
+  isTermNode: ScalarsEnums['Boolean'];
+  kRTitle?: Maybe<ScalarsEnums['String']>;
+  /**
+   * The id field matches the WP_Post-&gt;ID field.
+   * @deprecated Deprecated in favor of the databaseId field
+   */
+  koreanArticleId: ScalarsEnums['Int'];
+  /**
+   * The user that most recently edited the node
+   */
+  lastEditedBy?: Maybe<ContentNodeToEditLastConnectionEdge>;
+  /**
+   * The permalink of the post
+   */
+  link?: Maybe<ScalarsEnums['String']>;
+  /**
+   * The local modified time for a post. If a post was recently updated the modified field will change to match the corresponding time.
+   */
+  modified?: Maybe<ScalarsEnums['String']>;
+  /**
+   * The GMT modified time for a post. If a post was recently updated the modified field will change to match the corresponding time in GMT.
+   */
+  modifiedGmt?: Maybe<ScalarsEnums['String']>;
+  /**
+   * Connection between the koreanArticle type and the koreanArticle type
+   */
+  preview?: Maybe<KoreanArticleToPreviewConnectionEdge>;
+  /**
+   * The database id of the preview node
+   */
+  previewRevisionDatabaseId?: Maybe<ScalarsEnums['Int']>;
+  /**
+   * Whether the object is a node in the preview state
+   */
+  previewRevisionId?: Maybe<ScalarsEnums['ID']>;
+  /**
+   * The uri slug for the post. This is equivalent to the WP_Post-&gt;post_name field and the post_name column in the database for the &quot;post_objects&quot; table.
+   */
+  slug?: Maybe<ScalarsEnums['String']>;
+  /**
+   * The current status of the object
+   */
+  status?: Maybe<ScalarsEnums['String']>;
+  summary?: Maybe<ScalarsEnums['String']>;
+  /**
+   * The template assigned to a node of content
+   */
+  template?: Maybe<ContentTemplate>;
+  templates?: Maybe<Array<Maybe<ScalarsEnums['String']>>>;
+  /**
+   * The title of the post. This is currently just the raw title. An amendment to support rendered title needs to be made.
+   */
+  title: (args?: {
+    /**
+     * Format of the field output
+     */
+    format?: Maybe<PostObjectFieldFormatEnum>;
+  }) => Maybe<ScalarsEnums['String']>;
+  /**
+   * The unique resource identifier path
+   */
+  uri?: Maybe<ScalarsEnums['String']>;
+}
+
+/**
+ * Connection between the koreanArticle type and the koreanArticle type
+ */
+export interface KoreanArticleToPreviewConnectionEdge {
+  __typename?: 'KoreanArticleToPreviewConnectionEdge';
+  /**
+   * The node of the connection, without the edges
+   */
+  node?: Maybe<KoreanArticle>;
 }
 
 /**
@@ -10722,6 +11481,7 @@ export interface Node {
     | 'ContentType'
     | 'EnqueuedScript'
     | 'EnqueuedStylesheet'
+    | 'KoreanArticle'
     | 'MediaItem'
     | 'Menu'
     | 'MenuItem'
@@ -10747,7 +11507,13 @@ export interface Node {
  * A node that can have an author assigned to it
  */
 export interface NodeWithAuthor {
-  __typename?: 'MediaItem' | 'Page' | 'Post' | 'Project' | 'Testimonial';
+  __typename?:
+    | 'KoreanArticle'
+    | 'MediaItem'
+    | 'Page'
+    | 'Post'
+    | 'Project'
+    | 'Testimonial';
   /**
    * Connection between the NodeWithAuthor type and the User type
    */
@@ -10828,7 +11594,7 @@ export interface NodeWithExcerpt {
  * A node that can have a featured image set
  */
 export interface NodeWithFeaturedImage {
-  __typename?: 'Page' | 'Post' | 'Project';
+  __typename?: 'KoreanArticle' | 'Page' | 'Post' | 'Project';
   /**
    * @deprecated Deprecated in favor of using Next.js pages
    */
@@ -11041,7 +11807,13 @@ export interface NodeWithRevisionsToContentNodeConnectionEdge {
  * A node that can have a template associated with it
  */
 export interface NodeWithTemplate {
-  __typename?: 'MediaItem' | 'Page' | 'Post' | 'Project' | 'Testimonial';
+  __typename?:
+    | 'KoreanArticle'
+    | 'MediaItem'
+    | 'Page'
+    | 'Post'
+    | 'Project'
+    | 'Testimonial';
   /**
    * The template assigned to the node
    */
@@ -11053,7 +11825,13 @@ export interface NodeWithTemplate {
  * A node that NodeWith a title
  */
 export interface NodeWithTitle {
-  __typename?: 'MediaItem' | 'Page' | 'Post' | 'Project' | 'Testimonial';
+  __typename?:
+    | 'KoreanArticle'
+    | 'MediaItem'
+    | 'Page'
+    | 'Post'
+    | 'Project'
+    | 'Testimonial';
   /**
    * The title of the post. This is currently just the raw title. An amendment to support rendered title needs to be made.
    */
@@ -13033,6 +13811,40 @@ export interface RootQueryToEnqueuedStylesheetConnectionEdge {
 }
 
 /**
+ * Connection between the RootQuery type and the koreanArticle type
+ */
+export interface RootQueryToKoreanArticleConnection {
+  __typename?: 'RootQueryToKoreanArticleConnection';
+  /**
+   * Edges for the RootQueryToKoreanArticleConnection connection
+   */
+  edges?: Maybe<Array<Maybe<RootQueryToKoreanArticleConnectionEdge>>>;
+  /**
+   * The nodes of the connection, without the edges
+   */
+  nodes?: Maybe<Array<Maybe<KoreanArticle>>>;
+  /**
+   * Information about pagination in a connection.
+   */
+  pageInfo?: Maybe<WPPageInfo>;
+}
+
+/**
+ * An edge in a connection
+ */
+export interface RootQueryToKoreanArticleConnectionEdge {
+  __typename?: 'RootQueryToKoreanArticleConnectionEdge';
+  /**
+   * A cursor for use in pagination
+   */
+  cursor?: Maybe<ScalarsEnums['String']>;
+  /**
+   * The item at the end of the edge
+   */
+  node?: Maybe<KoreanArticle>;
+}
+
+/**
  * Connection between the RootQuery type and the mediaItem type
  */
 export interface RootQueryToMediaItemConnection {
@@ -14490,6 +15302,7 @@ export interface UniformResourceIdentifiable {
   __typename?:
     | 'Category'
     | 'ContentType'
+    | 'KoreanArticle'
     | 'MediaItem'
     | 'Page'
     | 'Post'
@@ -14554,6 +15367,21 @@ export interface UpdateCommentPayload {
    * Whether the mutation succeeded. If the comment is not approved, the server will not return the comment to a non authenticated user, but a success message can be returned if the create succeeded, and the client can optimistically add the comment to the client cache
    */
   success?: Maybe<ScalarsEnums['Boolean']>;
+}
+
+/**
+ * The payload for the updateKoreanArticle mutation
+ */
+export interface UpdateKoreanArticlePayload {
+  __typename?: 'UpdateKoreanArticlePayload';
+  /**
+   * If a &#039;clientMutationId&#039; input is provided to the mutation, it will be returned as output on the mutation. This ID can be used by the client to track the progress of mutations and catch possible duplicate mutation submissions.
+   */
+  clientMutationId?: Maybe<ScalarsEnums['String']>;
+  /**
+   * The Post object mutation type.
+   */
+  koreanArticle?: Maybe<KoreanArticle>;
 }
 
 /**
@@ -14641,7 +15469,7 @@ export interface UpdateSettingsPayload {
    */
   allSettings?: Maybe<Settings>;
   /**
-   * Update the atlasContentModelerSettings setting.
+   * Update the AtlasContentModelerSettingsSettings setting.
    */
   atlasContentModelerSettingsSettings?: Maybe<AtlasContentModelerSettingsSettings>;
   /**
@@ -14649,19 +15477,19 @@ export interface UpdateSettingsPayload {
    */
   clientMutationId?: Maybe<ScalarsEnums['String']>;
   /**
-   * Update the discussion setting.
+   * Update the DiscussionSettings setting.
    */
   discussionSettings?: Maybe<DiscussionSettings>;
   /**
-   * Update the general setting.
+   * Update the GeneralSettings setting.
    */
   generalSettings?: Maybe<GeneralSettings>;
   /**
-   * Update the reading setting.
+   * Update the ReadingSettings setting.
    */
   readingSettings?: Maybe<ReadingSettings>;
   /**
-   * Update the writing setting.
+   * Update the WritingSettings setting.
    */
   writingSettings?: Maybe<WritingSettings>;
 }
@@ -14849,6 +15677,31 @@ export interface User {
    * Whether the node is a Term
    */
   isTermNode: ScalarsEnums['Boolean'];
+  /**
+   * Connection between the User type and the koreanArticle type
+   */
+  koreanArticles: (args?: {
+    /**
+     * Cursor used along with the "first" argument to reference where in the dataset to get data
+     */
+    after?: Maybe<Scalars['String']>;
+    /**
+     * Cursor used along with the "last" argument to reference where in the dataset to get data
+     */
+    before?: Maybe<Scalars['String']>;
+    /**
+     * The number of items to return after the referenced "after" cursor
+     */
+    first?: Maybe<Scalars['Int']>;
+    /**
+     * The number of items to return before the referenced "before" cursor
+     */
+    last?: Maybe<Scalars['Int']>;
+    /**
+     * Arguments for filtering the connection
+     */
+    where?: Maybe<UserToKoreanArticleConnectionWhereArgs>;
+  }) => Maybe<UserToKoreanArticleConnection>;
   /**
    * Last name of the user. This is equivalent to the WP_User-&gt;user_last_name property.
    */
@@ -15232,6 +16085,40 @@ export interface UserToEnqueuedStylesheetConnectionEdge {
 }
 
 /**
+ * Connection between the User type and the koreanArticle type
+ */
+export interface UserToKoreanArticleConnection {
+  __typename?: 'UserToKoreanArticleConnection';
+  /**
+   * Edges for the UserToKoreanArticleConnection connection
+   */
+  edges?: Maybe<Array<Maybe<UserToKoreanArticleConnectionEdge>>>;
+  /**
+   * The nodes of the connection, without the edges
+   */
+  nodes?: Maybe<Array<Maybe<KoreanArticle>>>;
+  /**
+   * Information about pagination in a connection.
+   */
+  pageInfo?: Maybe<WPPageInfo>;
+}
+
+/**
+ * An edge in a connection
+ */
+export interface UserToKoreanArticleConnectionEdge {
+  __typename?: 'UserToKoreanArticleConnectionEdge';
+  /**
+   * A cursor for use in pagination
+   */
+  cursor?: Maybe<ScalarsEnums['String']>;
+  /**
+   * The item at the end of the edge
+   */
+  node?: Maybe<KoreanArticle>;
+}
+
+/**
  * Connection between the User type and the mediaItem type
  */
 export interface UserToMediaItemConnection {
@@ -15485,6 +16372,9 @@ export interface Mutation {
   createComment: (args: {
     input: CreateCommentInput;
   }) => Maybe<CreateCommentPayload>;
+  createKoreanArticle: (args: {
+    input: CreateKoreanArticleInput;
+  }) => Maybe<CreateKoreanArticlePayload>;
   createMediaItem: (args: {
     input: CreateMediaItemInput;
   }) => Maybe<CreateMediaItemPayload>;
@@ -15507,6 +16397,9 @@ export interface Mutation {
   deleteComment: (args: {
     input: DeleteCommentInput;
   }) => Maybe<DeleteCommentPayload>;
+  deleteKoreanArticle: (args: {
+    input: DeleteKoreanArticleInput;
+  }) => Maybe<DeleteKoreanArticlePayload>;
   deleteMediaItem: (args: {
     input: DeleteMediaItemInput;
   }) => Maybe<DeleteMediaItemPayload>;
@@ -15547,6 +16440,9 @@ export interface Mutation {
   updateComment: (args: {
     input: UpdateCommentInput;
   }) => Maybe<UpdateCommentPayload>;
+  updateKoreanArticle: (args: {
+    input: UpdateKoreanArticleInput;
+  }) => Maybe<UpdateKoreanArticlePayload>;
   updateMediaItem: (args: {
     input: UpdateMediaItemInput;
   }) => Maybe<UpdateMediaItemPayload>;
@@ -15616,6 +16512,24 @@ export interface Query {
   }) => Maybe<RootQueryToContentTypeConnection>;
   discussionSettings?: Maybe<DiscussionSettings>;
   generalSettings?: Maybe<GeneralSettings>;
+  koreanArticle: (args: {
+    asPreview?: Maybe<Scalars['Boolean']>;
+    id: Scalars['ID'];
+    idType?: Maybe<KoreanArticleIdType>;
+  }) => Maybe<KoreanArticle>;
+  koreanArticleBy: (args?: {
+    id?: Maybe<Scalars['ID']>;
+    koreanArticleId?: Maybe<Scalars['Int']>;
+    slug?: Maybe<Scalars['String']>;
+    uri?: Maybe<Scalars['String']>;
+  }) => Maybe<KoreanArticle>;
+  koreanArticles: (args?: {
+    after?: Maybe<Scalars['String']>;
+    before?: Maybe<Scalars['String']>;
+    first?: Maybe<Scalars['Int']>;
+    last?: Maybe<Scalars['Int']>;
+    where?: Maybe<RootQueryToKoreanArticleConnectionWhereArgs>;
+  }) => Maybe<RootQueryToKoreanArticleConnection>;
   mediaItem: (args: {
     asPreview?: Maybe<Scalars['Boolean']>;
     id: Scalars['ID'];
@@ -15683,6 +16597,7 @@ export interface Query {
     before?: Maybe<Scalars['String']>;
     first?: Maybe<Scalars['Int']>;
     last?: Maybe<Scalars['Int']>;
+    where?: Maybe<RootQueryToPluginConnectionWhereArgs>;
   }) => Maybe<RootQueryToPluginConnection>;
   post: (args: {
     asPreview?: Maybe<Scalars['Boolean']>;
@@ -15868,6 +16783,7 @@ export interface SchemaObjectTypes {
   ContentTypeToTaxonomyConnectionEdge: ContentTypeToTaxonomyConnectionEdge;
   CreateCategoryPayload: CreateCategoryPayload;
   CreateCommentPayload: CreateCommentPayload;
+  CreateKoreanArticlePayload: CreateKoreanArticlePayload;
   CreateMediaItemPayload: CreateMediaItemPayload;
   CreatePagePayload: CreatePagePayload;
   CreatePostFormatPayload: CreatePostFormatPayload;
@@ -15879,6 +16795,7 @@ export interface SchemaObjectTypes {
   DefaultTemplate: DefaultTemplate;
   DeleteCategoryPayload: DeleteCategoryPayload;
   DeleteCommentPayload: DeleteCommentPayload;
+  DeleteKoreanArticlePayload: DeleteKoreanArticlePayload;
   DeleteMediaItemPayload: DeleteMediaItemPayload;
   DeletePagePayload: DeletePagePayload;
   DeletePostFormatPayload: DeletePostFormatPayload;
@@ -15897,6 +16814,8 @@ export interface SchemaObjectTypes {
   HierarchicalContentNodeToContentNodeChildrenConnection: HierarchicalContentNodeToContentNodeChildrenConnection;
   HierarchicalContentNodeToContentNodeChildrenConnectionEdge: HierarchicalContentNodeToContentNodeChildrenConnectionEdge;
   HierarchicalContentNodeToParentContentNodeConnectionEdge: HierarchicalContentNodeToParentContentNodeConnectionEdge;
+  KoreanArticle: KoreanArticle;
+  KoreanArticleToPreviewConnectionEdge: KoreanArticleToPreviewConnectionEdge;
   MediaDetails: MediaDetails;
   MediaItem: MediaItem;
   MediaItemMeta: MediaItemMeta;
@@ -15964,6 +16883,8 @@ export interface SchemaObjectTypes {
   RootQueryToEnqueuedScriptConnectionEdge: RootQueryToEnqueuedScriptConnectionEdge;
   RootQueryToEnqueuedStylesheetConnection: RootQueryToEnqueuedStylesheetConnection;
   RootQueryToEnqueuedStylesheetConnectionEdge: RootQueryToEnqueuedStylesheetConnectionEdge;
+  RootQueryToKoreanArticleConnection: RootQueryToKoreanArticleConnection;
+  RootQueryToKoreanArticleConnectionEdge: RootQueryToKoreanArticleConnectionEdge;
   RootQueryToMediaItemConnection: RootQueryToMediaItemConnection;
   RootQueryToMediaItemConnectionEdge: RootQueryToMediaItemConnectionEdge;
   RootQueryToMenuConnection: RootQueryToMenuConnection;
@@ -16019,6 +16940,7 @@ export interface SchemaObjectTypes {
   Theme: Theme;
   UpdateCategoryPayload: UpdateCategoryPayload;
   UpdateCommentPayload: UpdateCommentPayload;
+  UpdateKoreanArticlePayload: UpdateKoreanArticlePayload;
   UpdateMediaItemPayload: UpdateMediaItemPayload;
   UpdatePagePayload: UpdatePagePayload;
   UpdatePostFormatPayload: UpdatePostFormatPayload;
@@ -16038,6 +16960,8 @@ export interface SchemaObjectTypes {
   UserToEnqueuedScriptConnectionEdge: UserToEnqueuedScriptConnectionEdge;
   UserToEnqueuedStylesheetConnection: UserToEnqueuedStylesheetConnection;
   UserToEnqueuedStylesheetConnectionEdge: UserToEnqueuedStylesheetConnectionEdge;
+  UserToKoreanArticleConnection: UserToKoreanArticleConnection;
+  UserToKoreanArticleConnectionEdge: UserToKoreanArticleConnectionEdge;
   UserToMediaItemConnection: UserToMediaItemConnection;
   UserToMediaItemConnectionEdge: UserToMediaItemConnectionEdge;
   UserToPageConnection: UserToPageConnection;
@@ -16089,6 +17013,7 @@ export type SchemaObjectTypesNames =
   | 'ContentTypeToTaxonomyConnectionEdge'
   | 'CreateCategoryPayload'
   | 'CreateCommentPayload'
+  | 'CreateKoreanArticlePayload'
   | 'CreateMediaItemPayload'
   | 'CreatePagePayload'
   | 'CreatePostFormatPayload'
@@ -16100,6 +17025,7 @@ export type SchemaObjectTypesNames =
   | 'DefaultTemplate'
   | 'DeleteCategoryPayload'
   | 'DeleteCommentPayload'
+  | 'DeleteKoreanArticlePayload'
   | 'DeleteMediaItemPayload'
   | 'DeletePagePayload'
   | 'DeletePostFormatPayload'
@@ -16118,6 +17044,8 @@ export type SchemaObjectTypesNames =
   | 'HierarchicalContentNodeToContentNodeChildrenConnection'
   | 'HierarchicalContentNodeToContentNodeChildrenConnectionEdge'
   | 'HierarchicalContentNodeToParentContentNodeConnectionEdge'
+  | 'KoreanArticle'
+  | 'KoreanArticleToPreviewConnectionEdge'
   | 'MediaDetails'
   | 'MediaItem'
   | 'MediaItemMeta'
@@ -16185,6 +17113,8 @@ export type SchemaObjectTypesNames =
   | 'RootQueryToEnqueuedScriptConnectionEdge'
   | 'RootQueryToEnqueuedStylesheetConnection'
   | 'RootQueryToEnqueuedStylesheetConnectionEdge'
+  | 'RootQueryToKoreanArticleConnection'
+  | 'RootQueryToKoreanArticleConnectionEdge'
   | 'RootQueryToMediaItemConnection'
   | 'RootQueryToMediaItemConnectionEdge'
   | 'RootQueryToMenuConnection'
@@ -16240,6 +17170,7 @@ export type SchemaObjectTypesNames =
   | 'Theme'
   | 'UpdateCategoryPayload'
   | 'UpdateCommentPayload'
+  | 'UpdateKoreanArticlePayload'
   | 'UpdateMediaItemPayload'
   | 'UpdatePagePayload'
   | 'UpdatePostFormatPayload'
@@ -16259,6 +17190,8 @@ export type SchemaObjectTypesNames =
   | 'UserToEnqueuedScriptConnectionEdge'
   | 'UserToEnqueuedStylesheetConnection'
   | 'UserToEnqueuedStylesheetConnectionEdge'
+  | 'UserToKoreanArticleConnection'
+  | 'UserToKoreanArticleConnectionEdge'
   | 'UserToMediaItemConnection'
   | 'UserToMediaItemConnectionEdge'
   | 'UserToPageConnection'
@@ -16280,6 +17213,7 @@ export interface $Commenter {
 }
 
 export interface $ContentNode {
+  KoreanArticle?: KoreanArticle;
   MediaItem?: MediaItem;
   Page?: Page;
   Post?: Post;
@@ -16303,6 +17237,7 @@ export interface $ContentTemplate {
 export interface $DatabaseIdentifier {
   Category?: Category;
   Comment?: Comment;
+  KoreanArticle?: KoreanArticle;
   MediaItem?: MediaItem;
   Menu?: Menu;
   MenuItem?: MenuItem;
@@ -16350,6 +17285,7 @@ export interface $Node {
   ContentType?: ContentType;
   EnqueuedScript?: EnqueuedScript;
   EnqueuedStylesheet?: EnqueuedStylesheet;
+  KoreanArticle?: KoreanArticle;
   MediaItem?: MediaItem;
   Menu?: Menu;
   MenuItem?: MenuItem;
@@ -16367,6 +17303,7 @@ export interface $Node {
 }
 
 export interface $NodeWithAuthor {
+  KoreanArticle?: KoreanArticle;
   MediaItem?: MediaItem;
   Page?: Page;
   Post?: Post;
@@ -16390,6 +17327,7 @@ export interface $NodeWithExcerpt {
 }
 
 export interface $NodeWithFeaturedImage {
+  KoreanArticle?: KoreanArticle;
   Page?: Page;
   Post?: Post;
   Project?: Project;
@@ -16405,6 +17343,7 @@ export interface $NodeWithRevisions {
 }
 
 export interface $NodeWithTemplate {
+  KoreanArticle?: KoreanArticle;
   MediaItem?: MediaItem;
   Page?: Page;
   Post?: Post;
@@ -16413,6 +17352,7 @@ export interface $NodeWithTemplate {
 }
 
 export interface $NodeWithTitle {
+  KoreanArticle?: KoreanArticle;
   MediaItem?: MediaItem;
   Page?: Page;
   Post?: Post;
@@ -16433,6 +17373,7 @@ export interface $TermNode {
 export interface $UniformResourceIdentifiable {
   Category?: Category;
   ContentType?: ContentType;
+  KoreanArticle?: KoreanArticle;
   MediaItem?: MediaItem;
   Page?: Page;
   Post?: Post;
@@ -16463,6 +17404,7 @@ export interface ScalarsEnums extends MakeNullable<Scalars> {
   ContentTypesOfCategoryEnum: ContentTypesOfCategoryEnum | undefined;
   ContentTypesOfPostFormatEnum: ContentTypesOfPostFormatEnum | undefined;
   ContentTypesOfTagEnum: ContentTypesOfTagEnum | undefined;
+  KoreanArticleIdType: KoreanArticleIdType | undefined;
   MediaItemIdType: MediaItemIdType | undefined;
   MediaItemSizeEnum: MediaItemSizeEnum | undefined;
   MediaItemStatusEnum: MediaItemStatusEnum | undefined;
@@ -16472,6 +17414,7 @@ export interface ScalarsEnums extends MakeNullable<Scalars> {
   MimeTypeEnum: MimeTypeEnum | undefined;
   OrderEnum: OrderEnum | undefined;
   PageIdType: PageIdType | undefined;
+  PluginStatusEnum: PluginStatusEnum | undefined;
   PostFormatIdType: PostFormatIdType | undefined;
   PostIdType: PostIdType | undefined;
   PostObjectFieldFormatEnum: PostObjectFieldFormatEnum | undefined;
