@@ -207,7 +207,7 @@ export function CRUDComponent({ post }) {
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm({ mode: onChange });
+  } = useForm({ mode: 'onChange' });
   // const userState = useSelector((state) => state);
   const dispatch = useDispatch();
   const [selectedModel, setSelectedModel] = useState(() => models[2]);
@@ -224,7 +224,7 @@ export function CRUDComponent({ post }) {
   useEffect(() => {
     setValue('language', selectedModel.language);
     setValue('model', selectedModel.id);
-    setValue('clothes', undefined);
+    setValue('clothes', selectedModel.clothes[0].id);
   }, [selectedModel]);
   return (
     <>
