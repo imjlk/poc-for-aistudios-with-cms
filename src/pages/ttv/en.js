@@ -7,9 +7,10 @@ import {
   Main,
   SubNav,
   LoadWPDataList,
+  TTVCreateTemp,
+  AuthWrapper,
 } from 'components';
 import { pageTitle } from 'utils';
-import { getNextStaticProps } from '@faustjs/next';
 
 export default function Page() {
   const { useQuery } = client;
@@ -25,21 +26,17 @@ export default function Page() {
 
       <Header />
       <Main>
-        <SubNav />
-        <EntryHeader title="영어 글 목록에서 TTV 모델 생성하기" />
-        <div className="container">
-          <LoadWPDataList queryPostType="en" />
-        </div>
+        <AuthWrapper>
+          <SubNav />
+          <EntryHeader title="영어 글 목록에서 TTV 모델 생성하기" />
+          <div className="container">
+            <LoadWPDataList queryPostType="en" />
+            <TTVCreateTemp />
+          </div>
+        </AuthWrapper>
       </Main>
 
       <Footer />
     </>
   );
-}
-
-export async function getStaticProps(context) {
-  return getNextStaticProps(context, {
-    Page,
-    client,
-  });
 }

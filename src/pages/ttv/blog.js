@@ -7,6 +7,7 @@ import {
   Main,
   SubNav,
   LoadWPDataList,
+  AuthWrapper,
 } from 'components';
 import { pageTitle } from 'utils';
 import { getNextStaticProps } from '@faustjs/next';
@@ -25,11 +26,13 @@ export default function Page() {
 
       <Header />
       <Main>
-        <SubNav />
-        <EntryHeader title="Blog 글 목록에서 TTV 모델 생성하기" />
-        <div className="container">
-          <LoadWPDataList queryPostType="blog" />
-        </div>
+        <AuthWrapper>
+          <SubNav />
+          <EntryHeader title="Blog 글 목록에서 TTV 모델 생성하기" />
+          <div className="container">
+            <LoadWPDataList queryPostType="blog" />
+          </div>
+        </AuthWrapper>
       </Main>
 
       <Footer />

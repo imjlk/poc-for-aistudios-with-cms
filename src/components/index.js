@@ -27,6 +27,7 @@ import LoadWPDataList from './LoadWPDataList';
 import TTVList from './TTVList';
 import AuthWrapper from './AuthWrapper';
 import SubNav from './SubNav';
+import TTVCreateTemp from './TTVCreateTemp';
 
 export {
   Button,
@@ -58,4 +59,5 @@ export {
   TTVList,
   AuthWrapper,
   SubNav,
+  TTVCreateTemp,
 };
