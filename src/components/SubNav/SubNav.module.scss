@@ -1,0 +1,9 @@
+.navigation {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 auto;
+  max-width: 1160px;
+}
+.active {
+  font-weight: 700;
+}

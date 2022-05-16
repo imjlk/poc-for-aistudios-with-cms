@@ -26,6 +26,7 @@ import LoginForm from './LoginForm';
 import LoadWPDataList from './LoadWPDataList';
 import TTVList from './TTVList';
 import AuthWrapper from './AuthWrapper';
+import SubNav from './SubNav';
 
 export {
   Button,
@@ -56,4 +57,5 @@ export {
   LoadWPDataList,
   TTVList,
   AuthWrapper,
+  SubNav,
 };
