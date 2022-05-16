@@ -7,12 +7,26 @@ import React, { useState } from 'react';
 
 import styles from './LoadWPDataList.module.scss';
 
-export default function LoadWPDataList() {
+export default function LoadWPDataList({ queryPostType = 'blog' }) {
   const [selectedItemSlug, setSelectedItemSlug] = useState('');
-  const { data, fetchMore, isLoading } = useNodePagination(
-    (query, queryArgs) => query.projects(queryArgs),
-    POST_NODES_PREPASS_FIELDS
-  );
+  const { data, fetchMore, isLoading } =
+    queryPostType === 'en'
+      ? // eslint-disable-next-line react-hooks/rules-of-hooks
+        useNodePagination(
+          (query, queryArgs) => query.projects(queryArgs),
+          POST_NODES_PREPASS_FIELDS
+        )
+      : queryPostType === 'ko'
+      ? // eslint-disable-next-line react-hooks/rules-of-hooks
+        useNodePagination(
+          (query, queryArgs) => query.koreanArticles(queryArgs),
+          POST_NODES_PREPASS_FIELDS
+        )
+      : // eslint-disable-next-line react-hooks/rules-of-hooks
+        useNodePagination(
+          (query, queryArgs) => query.posts(queryArgs),
+          POST_NODES_PREPASS_FIELDS
+        );
 
   return (
     <div className={styles.wrapper}>
@@ -39,17 +53,36 @@ export default function LoadWPDataList() {
         fetchMore={fetchMore}
       />
 
-      {selectedItemSlug && <SelectedItem slug={selectedItemSlug} />}
+      {selectedItemSlug && (
+        <SelectedItem queryPostType={queryPostType} slug={selectedItemSlug} />
+      )}
     </div>
   );
 }
 
-function SelectedItem({ slug }) {
+function SelectedItem({ slug, queryPostType }) {
   const { useQuery } = client;
-  const selectedPost = useQuery().project({
-    id: slug,
-    idType: 'SLUG',
-  });
+  // console.log(queryPostType);
+  const selectedPost =
+    queryPostType === 'en'
+      ? // eslint-disable-next-line react-hooks/rules-of-hooks
+        useQuery().project({
+          id: slug,
+          idType: 'SLUG',
+        })
+      : queryPostType === 'ko'
+      ? // eslint-disable-next-line react-hooks/rules-of-hooks
+        useQuery().koreanArticle({
+          id: slug,
+          idType: 'SLUG',
+        })
+      : // eslint-disable-next-line react-hooks/rules-of-hooks
+        useQuery().post({
+          id: slug,
+          idType: 'SLUG',
+        });
+
+  // console.log(selectedPost);
 
   return (
     <>
