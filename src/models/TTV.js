@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const TTVSchema = new mongoose.Schema({
   targetPostId: {
-    type: Array,
+    type: String,
   },
   language: {
     type: String,
