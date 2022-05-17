@@ -24,6 +24,31 @@ export class AiStudios {
     }
   }
 
+  static async generateToken(cToken, appId = 'aistudios.com', sdk_v = '1.0') {
+    try {
+      const axiosInstance = axios.create({
+        baseURL: AiStudios.AISTUDIOS_API_BASE_URL,
+      });
+      console.log('* * * getToken * * *');
+
+      const body = {
+        appId, // 발급받은 appId, default : "aistudios.com"
+        platform: 'web', // platfrom, static value : "web"
+        isClientToken: true, // 인증 방식이 ClientToken 인지, boolean : true
+        token: cToken, // token
+        uuid: AiStudios.AISTUDIOS_API_UUID, // uuid
+        sdk_v, // SDK 버전 명시, default "1.0"
+        clientHostname: appId, // 호스트명 appId 와 동일
+      };
+
+      const { data } = await axiosInstance.post('generateToken', body);
+
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   // getModelList (POST)
   static async getModelList(token, appId = 'aistudios.com', sdk_v = '1.0') {
     try {

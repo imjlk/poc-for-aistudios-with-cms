@@ -6,17 +6,11 @@ export default async function handler(req, res) {
   switch (method) {
     case 'GET':
       try {
-        const data = await AiStudios.generateClientToken();
-
-        // TODO: 쿠키 저장. 에러 재시도 처리
-        const rTokenData = await AiStudios.generateToken(data.token);
-        const { token } = rTokenData;
-        const newData = { ...data, rToken: token };
-
-        console.log('!token data', newData);
+        const data = await AiStudios.generateToken(req.body.token);
+        console.log('!rToken data', data);
         return res.status(200).json({
           success: true,
-          data: newData,
+          data: data,
         });
       } catch (error) {
         console.log(error);

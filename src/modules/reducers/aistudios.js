@@ -1,8 +1,10 @@
 import { HYDRATE } from 'next-redux-wrapper';
+
 import * as t from '../types';
 
 const initialState = {
   token: null,
+  rToken: null,
   tokenExpire: -1,
   models: null,
   model: undefined,
@@ -23,6 +25,7 @@ const mainReducer = (state = initialState, action) => {
       return {
         ...state,
         token: action.payload.data.token,
+        rToken: action.payload.data.rToken,
         tokenExpire: action.payload.data.tokenExpire,
       };
     case t.AISTUDIOS_MODELS_SUCCEEDED:

@@ -1,4 +1,5 @@
 import { put, takeLatest } from 'redux-saga/effects';
+
 import * as t from '../types';
 
 function* generateClientToken() {
