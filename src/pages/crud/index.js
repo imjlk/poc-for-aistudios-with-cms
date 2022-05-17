@@ -1,5 +1,5 @@
 import { getNextStaticProps, is404 } from '@faustjs/next';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { client } from 'client';
 import { useForm } from 'react-hook-form';
 import {
@@ -13,171 +13,13 @@ import {
 } from 'components';
 import { pageTitle } from 'utils';
 import { useEffect, useState } from 'react';
-import { addTTV, setSelectedTTV, updateTTV } from 'modules';
-const models = [
-  {
-    id: 'jonadan_ces',
-    label: {
-      en: 'Jonathan',
-      ko: '조나단',
-      zh: '乔纳森',
-    },
-    expertise: {
-      en: 'Announcer',
-      ko: '아나운서',
-      zh: '主持人',
-    },
-    imgPath:
-      'https://ai-platform-prd.s3.ap-northeast-2.amazonaws.com/modelAssets/clothes/thumbnail/jonadan_ces.jpg',
-    clothes: [
-      {
-        id: '1',
-        label: {
-          en: 'Navy',
-          ko: '남색',
-          zh: '红色的',
-        },
-        imgPath:
-          'https://ai-platform-prd.s3.ap-northeast-2.amazonaws.com/modelAssets/clothes/new_thumbnail/jonadan_ces/1.png',
-        intro:
-          'https://ai-platform-prd.s3.ap-northeast-2.amazonaws.com/modelAssets/modelIntro/ysy_2_intro.webm',
-      },
-    ],
-    language: ['en'],
-    gpuType: 'auto',
-  },
-  {
-    id: 'mizuki',
-    label: {
-      en: '水木',
-      ko: '미즈키',
-      zh: '助羅端',
-    },
-    expertise: {
-      en: 'Announcer',
-      ko: '아나운서',
-      zh: '主持人',
-    },
-    imgPath:
-      'https://ai-platform-prd.s3.ap-northeast-2.amazonaws.com/modelAssets/clothes/thumbnail/mizuki.png',
-    clothes: [
-      {
-        id: '1',
-        label: {
-          en: 'Gray',
-          ko: '회색',
-          zh: '灰色的',
-        },
-        imgPath:
-          'https://ai-platform-prd.s3.ap-northeast-2.amazonaws.com/modelAssets/clothes/new_thumbnail/mizuki/1.png',
-        intro:
-          'https://ai-platform-prd.s3.ap-northeast-2.amazonaws.com/modelAssets/modelIntro/ysy_2_intro.webm',
-      },
-      {
-        id: '2',
-        label: {
-          en: 'White',
-          ko: '흰색',
-          zh: '白色的',
-        },
-        imgPath:
-          'https://ai-platform-prd.s3.ap-northeast-2.amazonaws.com/modelAssets/clothes/new_thumbnail/mizuki/2.png',
-        intro:
-          'https://ai-platform-prd.s3.ap-northeast-2.amazonaws.com/modelAssets/modelIntro/ysy_2_intro.webm',
-      },
-      {
-        id: '3',
-        label: {
-          en: 'Blue',
-          ko: '파란색',
-          zh: '蓝色的',
-        },
-        imgPath:
-          'https://ai-platform-prd.s3.ap-northeast-2.amazonaws.com/modelAssets/clothes/new_thumbnail/mizuki/3.png',
-        intro:
-          'https://ai-platform-prd.s3.ap-northeast-2.amazonaws.com/modelAssets/modelIntro/ysy_2_intro.webm',
-      },
-      {
-        id: '4',
-        label: {
-          en: 'Pink',
-          ko: '분홍색',
-          zh: '粉色的',
-        },
-        imgPath:
-          'https://ai-platform-prd.s3.ap-northeast-2.amazonaws.com/modelAssets/clothes/new_thumbnail/mizuki/5.png',
-        intro:
-          'https://ai-platform-prd.s3.ap-northeast-2.amazonaws.com/modelAssets/modelIntro/ysy_2_intro.webm',
-      },
-    ],
-    language: ['jp'],
-    gpuType: 'auto',
-  },
-  {
-    id: 'ysy',
-    label: {
-      en: 'yoon sung young',
-      ko: '윤선영',
-      zh: '尹善英',
-    },
-    expertise: {
-      en: 'Home Shopping Host',
-      ko: '쇼호스트',
-      zh: '主持人',
-    },
-    imgPath:
-      'https://ai-platform-prd.s3.ap-northeast-2.amazonaws.com/modelAssets/clothes/thumbnail/ysy.jpg',
-    clothes: [
-      {
-        id: '2',
-        label: {
-          en: 'Red',
-          ko: '빨강',
-          zh: '红色的',
-        },
-        imgPath:
-          'https://ai-platform-prd.s3.ap-northeast-2.amazonaws.com/modelAssets/clothes/new_thumbnail/ysy/2.png',
-        intro:
-          'https://ai-platform-prd.s3.ap-northeast-2.amazonaws.com/modelAssets/modelIntro/ysy_2_intro.webm',
-      },
-    ],
-    language: ['ko'],
-    gpuType: '2.0',
-  },
-  {
-    id: 'shaosuki',
-    label: {
-      en: 'Shaosuki',
-      ko: '샤오치',
-      zh: '小琪',
-    },
-    expertise: {
-      en: 'Announcer',
-      ko: '아나운서',
-      zh: '播音员',
-    },
-    imgPath:
-      'https://ai-platform-prd.s3.ap-northeast-2.amazonaws.com/modelAssets/clothes/thumbnail/shaosuki.jpg',
-    clothes: [
-      {
-        id: '1',
-        label: {
-          en: 'Red',
-          ko: '빨강',
-          zh: '红色的',
-        },
-        imgPath:
-          'https://ai-platform-prd.s3.ap-northeast-2.amazonaws.com/modelAssets/clothes/new_thumbnail/shaosuki/1.png',
-        intro:
-          'https://ai-platform-prd.s3.ap-northeast-2.amazonaws.com/modelAssets/modelIntro/leesm_intro.mp4',
-        aiName: 'shaosuki',
-        costumeId: '61ec165cb72aec40a4238a2d',
-      },
-    ],
-    language: ['zh'],
-    gpuType: '2.0',
-  },
-];
+import {
+  addTTV,
+  generateClientToken,
+  getModelList,
+  setSelectedTTV,
+  updateTTV,
+} from 'modules';
 
 const getModelIndex = (data) => {
   switch (data) {
@@ -210,7 +52,10 @@ export function CRUDComponent({ post }) {
   } = useForm({ mode: 'onChange' });
   // const userState = useSelector((state) => state);
   const dispatch = useDispatch();
-  const [selectedModel, setSelectedModel] = useState(() => models[2]);
+  const { aistudios, ttv } = useSelector((state) => {
+    return state;
+  });
+  const [selectedModel, setSelectedModel] = useState(() => {});
   const onValid = (data) => {
     console.log('data', data);
     dispatch(addTTV(data));
@@ -219,90 +64,105 @@ export function CRUDComponent({ post }) {
   const generalSettings = useQuery().generalSettings;
   const onModelChange = (event) => {
     const modelIndex = getModelIndex(event.target.value);
-    setSelectedModel(models[modelIndex]);
+    setSelectedModel(aistudios?.models[modelIndex]);
   };
   useEffect(() => {
-    setValue('language', selectedModel.language);
-    setValue('model', selectedModel.id);
-    setValue('clothes', selectedModel.clothes[0].id);
+    dispatch(getModelList());
+  }, []);
+  useEffect(() => {
+    if (!aistudios?.models) return;
+    // 첫 화면 로딩 selectedModel 초기값, api에서 가져온 models의 index 2 (ysy : 윤선영)
+    setSelectedModel(aistudios?.models[2]);
+  }, [aistudios?.models]);
+  useEffect(() => {
+    setValue('language', selectedModel?.language);
+    setValue('model', selectedModel?.id);
+    setValue('clothes', selectedModel?.clothes[0].id);
   }, [selectedModel]);
   return (
     <>
-      {/* <SEO
-                title={pageTitle(
-                    generalSettings,
-                    post?.title(),
-                    generalSettings?.title
-                )}
-                imageUrl={post?.featuredImage?.node?.sourceUrl?.()}
-            /> */}
       <Header />
-
       <Main>
-        {/* <EntryHeader
-                    title={post}
-                    date={post?.date}
-                    author={post?.author?.node?.name}
-                    image={post?.featuredImage?.node}
-                /> */}
-        {/* "language": "ko",
-                "text": "안녕하세요",
-                "model": "ysy",
-                "clothes": "2" */}
         <div className="container">
           <form onSubmit={handleSubmit(onValid)}>
-            <select
-              {...register('language', { required: true })}
-              value={selectedModel?.language}
-              onChange={onModelChange}
-            >
-              {models?.map((model) => {
-                return (
-                  <>
-                    <option key={model.language} value={model.language}>
-                      {model.language}
-                    </option>
-                  </>
-                );
-              })}
-            </select>
-            <select
-              {...register('model', { required: true })}
-              value={selectedModel?.id}
-              onChange={onModelChange}
-            >
-              {models?.map((model) => {
-                return (
-                  <>
-                    <option key={model.id} value={model.id}>
-                      {model.label.ko}
-                    </option>
-                  </>
-                );
-              })}
-            </select>
-            <select {...register('clothes', { required: true })}>
-              {selectedModel?.clothes?.map((cloth) => {
-                return (
-                  <>
-                    <option key={cloth.id} value={cloth.id}>
-                      {cloth.label.ko}
-                    </option>
-                  </>
-                );
-              })}
-            </select>
-            {errors?.clothes}
+            <div className="with-video">
+              <div>
+                <select
+                  {...register('language', { required: true })}
+                  value={selectedModel?.language}
+                  onChange={onModelChange}
+                >
+                  {aistudios?.models?.map((model) => {
+                    return (
+                      <>
+                        <option key={model.language} value={model.language}>
+                          {model.language}
+                        </option>
+                      </>
+                    );
+                  })}
+                </select>
+                <select
+                  {...register('model', { required: true })}
+                  value={selectedModel?.id}
+                  onChange={onModelChange}
+                >
+                  {aistudios?.models?.map((model) => {
+                    return (
+                      <>
+                        <option key={model.id} value={model.id}>
+                          {model.label.ko}
+                        </option>
+                      </>
+                    );
+                  })}
+                </select>
+                <select
+                  style={{ width: '80px' }}
+                  {...register('clothes', { required: true })}
+                >
+                  {selectedModel?.clothes?.map((cloth) => {
+                    return (
+                      <>
+                        <option key={cloth.id} value={cloth.id}>
+                          {cloth.label.ko}
+                        </option>
+                      </>
+                    );
+                  })}
+                </select>
+                {errors?.clothes}
 
-            <div>
-              <textarea
-                {...register('text', { required: true })}
-                id=""
-                rows="10"
-              ></textarea>
-              <div className="btns">
-                <button>추가 / 수정</button>
-                <button type="button">비디오 등록</button>
+                <textarea
+                  {...register('text', { required: true })}
+                  id=""
+                  rows="10"
+                ></textarea>
+                <div className="btns">
+                  <button>추가 / 수정</button>
+                  <button type="button">비디오 등록</button>
+                </div>
+              </div>
+              <div className="video">
+                {1 ? (
+                  <>
+                    <video controls autoPlay>
+                      {/* <source src={aistudios.video} /> */}
+                      <source
+                        src={
+                          'https://ai-platform-public.s3.ap-northeast-2.amazonaws.com/shaosuki_1_20b287c90e1d504cfbc579de525654ec.mp4'
+                        }
+                      />
+                      해당 브라우저는 video 태그를 지원하지 않습니다.
+                    </video>
+                  </>
+                ) : (
+                  <>
+                    <div style={{ textAlign: 'center' }}>
+                      {aistudios?.progress ? `... ${aistudios?.progress}` : ''}
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </form>
@@ -315,13 +175,35 @@ export function CRUDComponent({ post }) {
 
       <Footer />
       <style jsx>{`
+        .with-video {
+          display: flex;
+          flex-direction: row;
+        }
+        select {
+          font-size: 18px;
+          border-radius: 3px;
+          transition: 0.3s;
+        }
+        .with-video {
+          border-radius: 16px;
+          padding: 0 30px;
+          height: 60rem;
+        }
+        .video {
+          margin-left: 30px;
+          width: 30rem !important;
+          height: 30rem !important;
+        }
         button {
+          font-weight: 600;
+          font-size: 18px;
+          background-color: aliceblue;
           border-radius: 15px;
           padding: 30px 0;
           transition: 0.2s;
         }
         button:hover {
-          background-color: orange;
+          background-color: #ffcd70;
         }
         button:active {
           background-color: yellow;
@@ -337,15 +219,17 @@ export function CRUDComponent({ post }) {
         }
         .container {
           height: 100%;
-          padding-top: 100px;
+          padding-top: 60px;
         }
         .container div {
-          background-color: aqua;
+          background-color: #8cffff;
         }
         textarea {
-          width: 80rem;
+          width: 100%;
+          height: 30rem;
           padding: 10px;
           border-radius: 16px;
+          margin-bottom: 30px;
         }
       `}</style>
     </>

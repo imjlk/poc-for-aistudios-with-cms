@@ -1,8 +1,10 @@
-import { combineReducers } from "redux";
-import ttvReducer from "./ttv";
+import { combineReducers } from 'redux';
+import aistudiosReducer from './aistudios';
+import ttvReducer from './ttv';
 
 const rootReducer = combineReducers({
-    ttv: ttvReducer,
+  aistudios: aistudiosReducer,
+  ttv: ttvReducer,
 });
 
 export default rootReducer;

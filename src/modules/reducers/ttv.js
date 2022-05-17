@@ -3,8 +3,13 @@ import { HYDRATE } from 'next-redux-wrapper';
 import * as t from '../types';
 
 const initialState = {
-  ttvList: [],
-  selectedTTV: null,
+  targetPostId: null,
+  language: null,
+  model: null,
+  clothes: null,
+  text: null,
+  isCompleted: false,
+  videoUrl: null,
 };
 
 const mainReducer = (state = initialState, action) => {
