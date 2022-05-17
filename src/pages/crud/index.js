@@ -1,74 +1,52 @@
-import { getNextStaticProps, is404 } from '@faustjs/next';
 import { useDispatch, useSelector } from 'react-redux';
-import { client } from 'client';
 import { useForm } from 'react-hook-form';
-import {
-  ContentWrapper,
-  Footer,
-  Header,
-  EntryHeader,
-  Main,
-  SEO,
-  TaxonomyTerms,
-} from 'components';
-import { pageTitle } from 'utils';
+import { Footer, Header, Main } from 'components';
 import { useEffect, useState } from 'react';
-import {
-  addTTV,
-  generateClientToken,
-  getModelList,
-  setSelectedTTV,
-  updateTTV,
-} from 'modules';
+import { addTTV, generateClientToken, getModelList } from 'modules';
 
 const getModelIndex = (data) => {
   switch (data) {
     case 'jonadan_ces':
     case 'en':
       return 0;
-      break;
     case 'mizuki':
     case 'jp':
       return 1;
-      break;
     case 'ysy':
     case 'ko':
       return 2;
-      break;
     case 'shaosuki':
     case 'zh':
       return 3;
-      break;
   }
 };
 
-export function CRUDComponent({ post }) {
+export function CRUDComponent() {
   const {
     register,
-    watch,
     handleSubmit,
     setValue,
     formState: { errors },
   } = useForm({ mode: 'onChange' });
   // const userState = useSelector((state) => state);
   const dispatch = useDispatch();
-  const { aistudios, ttv } = useSelector((state) => {
+  const { aistudios } = useSelector((state) => {
     return state;
   });
+  console.log('aistudios state >>', aistudios);
   const [selectedModel, setSelectedModel] = useState(() => {});
   const onValid = (data) => {
     console.log('data', data);
     dispatch(addTTV(data));
   };
-  const { useQuery } = client;
-  const generalSettings = useQuery().generalSettings;
   const onModelChange = (event) => {
     const modelIndex = getModelIndex(event.target.value);
     setSelectedModel(aistudios?.models[modelIndex]);
   };
   useEffect(() => {
     dispatch(getModelList());
-  }, []);
+    dispatch(generateClientToken());
+  }, [dispatch]);
   useEffect(() => {
     if (!aistudios?.models) return;
     // 첫 화면 로딩 selectedModel 초기값, api에서 가져온 models의 index 2 (ysy : 윤선영)
@@ -144,25 +122,30 @@ export function CRUDComponent({ post }) {
                 </div>
               </div>
               <div className="video">
-                {1 ? (
-                  <>
-                    <video controls autoPlay>
-                      {/* <source src={aistudios.video} /> */}
-                      <source
-                        src={
-                          'https://ai-platform-public.s3.ap-northeast-2.amazonaws.com/shaosuki_1_20b287c90e1d504cfbc579de525654ec.mp4'
-                        }
-                      />
-                      해당 브라우저는 video 태그를 지원하지 않습니다.
-                    </video>
-                  </>
-                ) : (
-                  <>
-                    <div style={{ textAlign: 'center' }}>
-                      {aistudios?.progress ? `... ${aistudios?.progress}` : ''}
-                    </div>
-                  </>
-                )}
+                {
+                  // eslint-disable-next-line no-constant-condition
+                  1 ? (
+                    <>
+                      <video controls autoPlay>
+                        {/* <source src={aistudios.video} /> */}
+                        <source
+                          src={
+                            'https://ai-platform-public.s3.ap-northeast-2.amazonaws.com/shaosuki_1_20b287c90e1d504cfbc579de525654ec.mp4'
+                          }
+                        />
+                        해당 브라우저는 video 태그를 지원하지 않습니다.
+                      </video>
+                    </>
+                  ) : (
+                    <>
+                      <div style={{ textAlign: 'center' }}>
+                        {aistudios?.progress
+                          ? `... ${aistudios?.progress}`
+                          : ''}
+                      </div>
+                    </>
+                  )
+                }
               </div>
             </div>
           </form>
@@ -237,23 +220,6 @@ export function CRUDComponent({ post }) {
 }
 
 export default function CRUDPage() {
-  const { usePost } = client;
-  // const post = usePost();
   const post = {};
   return <CRUDComponent post={post} />;
 }
-
-// export async function getStaticProps(context) {
-//     return getNextStaticProps(context, {
-//         Page,
-//         client,
-//         notFound: await is404(context, { client }),
-//     });
-// }
-
-// export function getStaticPaths() {
-//     return {
-//         paths: ['/crud'],
-//         fallback: 'blocking',
-//     };
-// }

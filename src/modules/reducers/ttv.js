@@ -3,12 +3,15 @@ import { HYDRATE } from 'next-redux-wrapper';
 import * as t from '../types';
 
 const initialState = {
+  _id: null,
   targetPostId: null,
   language: null,
   model: null,
   clothes: null,
   text: null,
   isCompleted: false,
+  isVideoRequested: false,
+  key: null,
   videoUrl: null,
 };
 

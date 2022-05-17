@@ -1,14 +1,15 @@
 import { AiStudios } from 'models/AiStudios';
 
-export default async (req, res) => {
+export default async function handler(req, res) {
   const { method } = req;
 
   switch (method) {
     case 'POST':
       try {
-        const tokenData = await AiStudios.generateClientToken();
-        const { token, key } = JSON.parse(req.body);
-        const data = await AiStudios.findProject(tokenData.token, key);
+        const { token, key } = req.body;
+        // const tokenData = await AiStudios.generateClientToken();
+        // const { token, key } = JSON.parse(req.body);
+        const data = await AiStudios.findProject(token, key);
 
         return res.status(200).json({
           success: true,
@@ -23,4 +24,4 @@ export default async (req, res) => {
     default:
       return res.status(405).json({ success: false });
   }
-};
+}

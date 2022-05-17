@@ -27,9 +27,16 @@ const TTVSchema = new mongoose.Schema({
   isCompleted: {
     type: Boolean,
   },
+  isVideoRequested: {
+    type: Boolean,
+  },
+  key: {
+    type: String,
+  },
   videoUrl: {
     type: String,
     validate: (url) => {
+      // eslint-disable-next-line no-useless-escape
       return /(http | https): \/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?mp4$/.test(
         url
       );

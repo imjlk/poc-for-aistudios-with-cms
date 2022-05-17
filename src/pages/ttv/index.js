@@ -9,11 +9,22 @@ import {
   SubNav,
 } from 'components';
 import { pageTitle } from 'utils';
-import { getNextStaticProps } from '@faustjs/next';
+// import { getNextStaticProps } from '@faustjs/next';
+import { useDispatch, useSelector } from 'react-redux';
+import { generateClientToken } from 'modules';
+import { useEffect } from 'react';
 
 export default function Page() {
   const { useQuery } = client;
   const generalSettings = useQuery().generalSettings;
+  const dispatch = useDispatch();
+  const { aistudios } = useSelector((state) => {
+    return state;
+  });
+  console.log('aistudios state >>', aistudios);
+  useEffect(() => {
+    dispatch(generateClientToken());
+  }, [dispatch]);
 
   return (
     <>
@@ -34,9 +45,9 @@ export default function Page() {
   );
 }
 
-export async function getStaticProps(context) {
-  return getNextStaticProps(context, {
-    Page,
-    client,
-  });
-}
+// export async function getStaticProps(context) {
+//   return getNextStaticProps(context, {
+//     Page,
+//     client,
+//   });
+// }

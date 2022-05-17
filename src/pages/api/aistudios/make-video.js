@@ -1,12 +1,12 @@
 import { AiStudios } from 'models/AiStudios';
 
-export default async (req, res) => {
+export default async function handler(req, res) {
   const { method } = req;
 
   switch (method) {
     case 'POST':
       try {
-        const { token, text, model, language } = JSON.parse(req.body);
+        const { token, text, model, language } = req.body;
         const data = await AiStudios.makeVideo(token, text, model, language);
 
         return res.status(200).json({
@@ -22,4 +22,4 @@ export default async (req, res) => {
     default:
       return res.status(405).json({ success: false });
   }
-};
+}

@@ -1,6 +1,6 @@
 import { AiStudios } from 'models/AiStudios';
 
-export default async (req, res) => {
+export default async function handler(req, res) {
   const { method } = req;
 
   switch (method) {
@@ -8,7 +8,7 @@ export default async (req, res) => {
       try {
         const tokenData = await AiStudios.generateClientToken();
         // const { token } = JSON.parse(req.body);
-        console.log('tokenData.token :', tokenData.token);
+        // console.log('tokenData.token :', tokenData.token);
         const data = await AiStudios.getModelList(tokenData.token);
 
         return res.status(200).json({
@@ -24,4 +24,4 @@ export default async (req, res) => {
     default:
       return res.status(405).json({ success: false });
   }
-};
+}
