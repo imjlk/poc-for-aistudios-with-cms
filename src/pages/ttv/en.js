@@ -6,7 +6,7 @@ import {
   Footer,
   Main,
   SubNav,
-  LoadWPDataList,
+  LoadWPEnDataList,
   TTVCreateTemp,
   AuthWrapper,
 } from 'components';
@@ -30,7 +30,7 @@ export default function Page() {
           <SubNav />
           <EntryHeader title="영어 글 목록에서 TTV 모델 생성하기" />
           <div className="container">
-            <LoadWPDataList queryPostType="en" />
+            <LoadWPEnDataList queryPostType="en" />
             <TTVCreateTemp />
           </div>
         </AuthWrapper>

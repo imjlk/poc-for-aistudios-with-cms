@@ -1,4 +1,5 @@
 import { useDispatch } from 'react-redux';
+import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import { addTTV } from 'modules';
@@ -185,6 +186,7 @@ const getModelIndex = (data) => {
 };
 
 export default function TTVCreateTemp() {
+  const router = useRouter();
   const { register, handleSubmit } = useForm();
   // const userState = useSelector((state) => state);
   const dispatch = useDispatch();
@@ -192,6 +194,7 @@ export default function TTVCreateTemp() {
   const onValid = (data) => {
     console.log('data', data);
     dispatch(addTTV(data));
+    router.push('/ttv');
   };
   const onModelChange = (event) => {
     setSelectedModel(models[getModelIndex(event.target.value)]);

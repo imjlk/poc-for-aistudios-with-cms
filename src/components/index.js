@@ -24,6 +24,9 @@ import TaxonomyTerms from './TaxonomyTerms';
 import Testimonials from './Testimonials';
 import LoginForm from './LoginForm';
 import LoadWPDataList from './LoadWPDataList';
+import LoadWPBlogDataList from './LoadWPBlogDataList';
+import LoadWPEnDataList from './LoadWPEnDataList';
+import LoadWPKoDataList from './LoadWPKoDataList';
 import TTVList from './TTVList';
 import AuthWrapper from './AuthWrapper';
 import SubNav from './SubNav';
@@ -60,4 +63,7 @@ export {
   AuthWrapper,
   SubNav,
   TTVCreateTemp,
+  LoadWPBlogDataList,
+  LoadWPEnDataList,
+  LoadWPKoDataList,
 };

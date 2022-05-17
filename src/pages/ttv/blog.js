@@ -6,8 +6,9 @@ import {
   Footer,
   Main,
   SubNav,
-  LoadWPDataList,
+  LoadWPBlogDataList,
   AuthWrapper,
+  TTVCreateTemp,
 } from 'components';
 import { pageTitle } from 'utils';
 import { getNextStaticProps } from '@faustjs/next';
@@ -30,7 +31,8 @@ export default function Page() {
           <SubNav />
           <EntryHeader title="Blog 글 목록에서 TTV 모델 생성하기" />
           <div className="container">
-            <LoadWPDataList queryPostType="blog" />
+            <LoadWPBlogDataList queryPostType="blog" />
+            <TTVCreateTemp />
           </div>
         </AuthWrapper>
       </Main>
