@@ -17,6 +17,7 @@ import {
   addTTV,
   generateClientToken,
   getModelList,
+  makeVideo,
   setSelectedTTV,
   updateTTV,
 } from 'modules';
@@ -66,6 +67,9 @@ export function CRUDComponent({ post }) {
     const modelIndex = getModelIndex(event.target.value);
     setSelectedModel(aistudios?.models[modelIndex]);
   };
+  const onMakeVideo = () => {
+    dispatch(makeVideo(ttv.model, ttv.text, ttv.language));
+  };
   useEffect(() => {
     dispatch(getModelList());
   }, []);
@@ -75,7 +79,7 @@ export function CRUDComponent({ post }) {
     setSelectedModel(aistudios?.models[2]);
   }, [aistudios?.models]);
   useEffect(() => {
-    setValue('language', selectedModel?.language);
+    setValue('language', selectedModel?.language[0]);
     setValue('model', selectedModel?.id);
     setValue('clothes', selectedModel?.clothes[0].id);
   }, [selectedModel]);
@@ -89,14 +93,17 @@ export function CRUDComponent({ post }) {
               <div>
                 <select
                   {...register('language', { required: true })}
-                  value={selectedModel?.language}
+                  value={selectedModel?.language[0]}
                   onChange={onModelChange}
                 >
                   {aistudios?.models?.map((model) => {
                     return (
                       <>
-                        <option key={model.language} value={model.language}>
-                          {model.language}
+                        <option
+                          key={model.language[0]}
+                          value={model.language[0]}
+                        >
+                          {model.language[0]}
                         </option>
                       </>
                     );
@@ -132,7 +139,10 @@ export function CRUDComponent({ post }) {
                   })}
                 </select>
                 {errors?.clothes}
-
+                <div style={{ float: 'right', width: '380px' }}>
+                  {aistudios['key'] ? `key : ${aistudios['key']}` : ''}/
+                  {ttv['_id'] ? `id : ${ttv['_id']}` : ''}
+                </div>
                 <textarea
                   {...register('text', { required: true })}
                   id=""
@@ -140,7 +150,13 @@ export function CRUDComponent({ post }) {
                 ></textarea>
                 <div className="btns">
                   <button>추가 / 수정</button>
-                  <button type="button">비디오 등록</button>
+                  <button
+                    type="button"
+                    disabled={ttv['_id'] === undefined}
+                    onClick={onMakeVideo}
+                  >
+                    비디오 등록
+                  </button>
                 </div>
               </div>
               <div className="video">
@@ -207,6 +223,9 @@ export function CRUDComponent({ post }) {
         }
         button:active {
           background-color: yellow;
+        }
+        button:disabled {
+          background-color: rgba(255, 255, 255, 0.3);
         }
         .btns {
           display: flex;

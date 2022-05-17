@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 
-const TTVSchema = new mongoose.Schema({
+var TTVSchema = new mongoose.Schema({
   targetPostId: {
-    type: String,
+    type: Array,
   },
   language: {
     type: String,
@@ -24,19 +24,12 @@ const TTVSchema = new mongoose.Schema({
     required: [true, 'Text is required!'],
     trim: true,
   },
-  isCompleted: {
-    type: Boolean,
-  },
   videoUrl: {
     type: String,
-    validate: (url) => {
-      return /(http | https): \/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?mp4$/.test(
-        url
-      );
-    },
   },
   modifiedAt: { type: Date, default: Date.now },
   createdAt: { type: Date, default: Date.now },
 });
 
-export default mongoose.models.TTV || mongoose.model('TTV', TTVSchema);
+export default mongoose.model('TTV', TTVSchema) ||
+  mongoose.model('TTV', TTVSchema);

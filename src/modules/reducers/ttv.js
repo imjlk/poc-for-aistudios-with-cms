@@ -24,7 +24,7 @@ const mainReducer = (state = initialState, action) => {
     case t.TTV_ADD_SUCCEEDED:
       return {
         ...state,
-        ttvList: [action.payload, ...state.ttvList],
+        ...action.payload,
       };
     case t.TTV_UPDATE_SUCCEEDED:
       return {

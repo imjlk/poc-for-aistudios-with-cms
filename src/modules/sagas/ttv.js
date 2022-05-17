@@ -27,9 +27,6 @@ function* addTTV(action) {
   try {
     const response = yield fetch('/api/ttv', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
       body: JSON.stringify(action.payload),
     });
 

@@ -6,9 +6,15 @@ export default async (req, res) => {
   switch (method) {
     case 'POST':
       try {
-        const { token, text, model, language } = JSON.parse(req.body);
-        const data = await AiStudios.makeVideo(token, text, model, language);
-
+        const { text, model, language } = JSON.parse(req.body);
+        const tokenData = await AiStudios.generateClientToken();
+        const data = await AiStudios.makeVideo(
+          tokenData.token,
+          text,
+          model,
+          language
+        );
+        console.log('makeVideo :', data);
         return res.status(200).json({
           success: true,
           data: data,

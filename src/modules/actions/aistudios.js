@@ -13,10 +13,10 @@ export const getModelList = () => {
   };
 };
 
-export const makeVideo = (token, model, text, language) => {
+export const makeVideo = (model, text, language) => {
   return {
-    type: t.DEEP_BRAIN_VIDEO_REQUESTED,
-    payload: { token, model, text, language },
+    type: t.AISTUDIOS_VIDEO_REQUESTED,
+    payload: { model, text, language },
   };
 };
 
