@@ -57,7 +57,7 @@ function* makeVideo(action) {
     const data = yield response.json();
 
     yield put({
-      type: t.AISTUDIOS_TOKEN_SUCCEEDED,
+      type: t.AISTUDIOS_VIDEO_SUCCEEDED,
       payload: data,
     });
   } catch (error) {
